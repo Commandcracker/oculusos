@@ -102,10 +102,10 @@ while true do
 	if pc == true then
 	
 		term.setCursorPos(4,6)
-		term.write(" "..os.version())
+		term.write(" ".."OculusOS")
 		
 		term.setCursorPos(4,7)
-		term.write(" ".."OculusOS")
+		term.write(" "..os.version())
 		
 		term.setCursorPos(4,8)
 		term.write(" ".."Startup")
@@ -115,10 +115,10 @@ while true do
 	if moved == true and pc == false then
 	
 		term.setCursorPos(4,6)
-		term.write(" "..os.version())
+		term.write(" ".."OculusOS")
 		
 		term.setCursorPos(4,7)
-		term.write(" ".."OculusOS")
+		term.write(" "..os.version())
 		
 		term.setCursorPos(4,8)
 		term.write(" ".."Startup")
@@ -278,15 +278,20 @@ function disk (disk,disk_name)
 	end
 end
 
+CraftOS = false
+
+-- CraftOS
 if selected == 2 then
 	term.setBackgroundColor(colors.black)
 	term.clear()
 	term.setCursorPos(1,1)
 	if term.isColor() then
-		term.setTextColor(colors.red)
+		term.setTextColor(colors.yellow)
 	end
-	term.write("OculusOS is not done starting: "..os.version())
-	sleep(2)
+	term.write(os.version())
+	term.setCursorPos(1,2)
+	CraftOS = true
+-- Boot
 elseif selected == 3 then
 	if not fs.exists("boot") then
 		term.setBackgroundColor(colors.black)
@@ -312,6 +317,7 @@ elseif selected == 3 then
 		term.write("Boot done ore crashed: "..os.version())
 		sleep(2)
 	end
+-- disks
 elseif selected == 4 then
 	disk("disk","Disk1")
 elseif selected == 5 then
@@ -324,12 +330,18 @@ elseif selected == 8 then
 	disk("disk5","Disk5")
 end
 
---CraftOS
-term.setBackgroundColor(colors.black)
-term.clear()
-term.setCursorPos(1,1)
-if term.isColor() then
-	term.setTextColor(colors.yellow)
+-- OculusOS
+
+if not CraftOS then
+	term.setBackgroundColor(colors.black)
+	term.clear()
+	term.setCursorPos(1,1)
+	shell.execute("shell")
+	if term.isColour() then
+		term.setTextColour( colours.yellow )
+	end
+	print( "Goodbye" )
+	term.setTextColour( colours.white )
+	sleep(1)
+	os.shutdown()
 end
-term.write(os.version())
-term.setCursorPos(1,2)

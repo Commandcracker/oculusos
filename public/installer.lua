@@ -95,6 +95,7 @@ else
 end
 
 download(url .. "startup.lua", "startup")
+download(url .. "shell.lua", "shell")
 
 print()
 
