@@ -32,6 +32,6 @@ pastebin run cCENE9mc
 ```
 Gitlab
 ```
-wget https://commandcracker.gitlab.io/oculusos/installer.lua installer.lua
-installer.lua
+wget https://commandcracker.gitlab.io/oculusos/installer.lua installer
+installer
 ```
