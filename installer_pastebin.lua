@@ -17,7 +17,7 @@ local function get(url)
     end
 end
 
-url = "https://gitlab.com/Commandcracker/oculusos/-/raw/master/installer.lua"
+url = "http://gitlab.com/Commandcracker/oculusos/-/raw/master/installer.lua"
 
 local res = get(url)
 if res then

@@ -5,19 +5,19 @@ local function printUsage()
     print( "pastebin get <code> <filename>" )
     print( "pastebin run <code> <arguments>" )
 end
- 
+
 local tArgs = { ... }
 if #tArgs < 2 then
     printUsage()
     return
 end
- 
+
 if not http then
     printError( "Pastebin requires http API" )
     printError( "Set http_enable to true in ComputerCraft.cfg" )
     return
 end
- 
+
 local function get(paste)
     write( "Connecting to pastebin.com... " )
     local response = http.get(
