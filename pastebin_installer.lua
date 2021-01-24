@@ -17,16 +17,17 @@ local function get(url)
     end
 end
 
-url = "https://commandcracker.gitlab.io/oculusos/installer.lua"
-
+local url = "https://commandcracker.gitlab.io/oculusos/installer.lua"
+local tArgs = { ... }
 local res = get(url)
+
 if res then
     local func, err = load(res, url, "t", _ENV)
     if not func then
         printError( err )
         return
     end
-    local success, msg = pcall(func, table.unpack(tArgs, 3))
+    local success, msg = pcall(func, table.unpack(tArgs, 1))
     if not success then
         printError( msg )
     end
