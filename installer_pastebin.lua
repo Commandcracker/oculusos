@@ -5,10 +5,8 @@ if not http then
     return
 end
 
-url = "https://gitlab.com/Commandcracker/oculusos/-/raw/master/installer.lua"
-
 local function get(url)
-    local response = http.get(textutils.urlEncode( url ))
+    local response = http.get(url)
     
     if response then
         local sResponse = response.readAll()
@@ -19,7 +17,9 @@ local function get(url)
     end
 end
 
-local res = get(sCode)
+url = "https://gitlab.com/Commandcracker/oculusos/-/raw/master/installer.lua"
+
+local res = get(url)
 if res then
     local func, err = load(res, url, "t", _ENV)
     if not func then
