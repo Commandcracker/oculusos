@@ -1,1 +1,1 @@
-print("installer")
+print("from the main installer")

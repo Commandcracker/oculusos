@@ -1,4 +1,3 @@
-
 local function printUsage()
     print( "Usages:" )
     print( "pastebin put <filename>" )
@@ -21,7 +20,7 @@ end
 local function get(paste)
     write( "Connecting to pastebin.com... " )
     local response = http.get(
-        "http://pastebin.com/raw/"..textutils.urlEncode( paste )
+        "https://pastebin.com/raw/"..textutils.urlEncode( paste )
     )
     
     if response then
@@ -34,7 +33,7 @@ local function get(paste)
         print( "Failed." )
     end
 end
- 
+
 local sCommand = tArgs[1]
 if sCommand == "put" then
     -- Upload a file to pastebin.com
@@ -56,14 +55,14 @@ if sCommand == "put" then
     write( "Connecting to pastebin.com... " )
     local key = "0ec2eb25b6166c0c27a394ae118ad829"
     local response = http.post(
-        "http://pastebin.com/api/api_post.php", 
+        "https://pastebin.com/api/api_post.php", 
         "api_option=paste&"..
         "api_dev_key="..key.."&"..
         "api_paste_format=lua&"..
         "api_paste_name="..textutils.urlEncode(sName).."&"..
         "api_paste_code="..textutils.urlEncode(sText)
     )
-        
+    
     if response then
         print( "Success." )
         
@@ -73,7 +72,7 @@ if sCommand == "put" then
         local sCode = string.match( sResponse, "[^/]+$" )
         print( "Uploaded as "..sResponse )
         print( "Run \"pastebin get "..sCode.."\" to download anywhere" )
- 
+
     else
         print( "Failed." )
     end
@@ -84,7 +83,7 @@ elseif sCommand == "get" then
         printUsage()
         return
     end
- 
+
     -- Determine file to download
     local sCode = tArgs[2]
     local sFile = tArgs[3]
@@ -95,7 +94,7 @@ elseif sCommand == "get" then
     end
     
     -- GET the contents from pastebin
-    local res = (sCode)
+    local res = get(sCode)
     if res then        
         local file = fs.open( sPath, "w" )
         file.write( res )
@@ -105,7 +104,7 @@ elseif sCommand == "get" then
     end 
 elseif sCommand == "run" then
     local sCode = tArgs[2]
- 
+
     local res = get(sCode)
     if res then
         local func, err = load(res, sCode, "t", _ENV)

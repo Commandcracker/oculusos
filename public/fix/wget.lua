@@ -1,4 +1,3 @@
-
 local function printUsage()
     print( "Usage:" )
     print( "wget <url> <filename>" )
@@ -59,4 +58,3 @@ if res then
 
     print( "Downloaded as "..sFile )
 end
-
