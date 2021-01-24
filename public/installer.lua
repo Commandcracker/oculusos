@@ -1,3 +1,4 @@
-print("from the main installer")
+term.clear()
+print("Installer")
 local tArgs = { ... }
 print(tArgs[1])
