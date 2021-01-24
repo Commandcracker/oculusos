@@ -23,7 +23,7 @@ local function get(paste)
     local response = http.get(
         "http://pastebin.com/raw/"..textutils.urlEncode( paste )
     )
-        
+    
     if response then
         print( "Success." )
         
@@ -95,7 +95,7 @@ elseif sCommand == "get" then
     end
     
     -- GET the contents from pastebin
-    local res = get(sCode)
+    local res = (sCode)
     if res then        
         local file = fs.open( sPath, "w" )
         file.write( res )

@@ -8,7 +8,7 @@ end
 url = "https://gitlab.com/Commandcracker/oculusos/-/raw/master/installer.lua"
 
 local function get(url)
-    local response = http.get(url)
+    local response = http.get(textutils.urlEncode( url ))
     
     if response then
         local sResponse = response.readAll()
