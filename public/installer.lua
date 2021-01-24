@@ -7,11 +7,9 @@ else
 end
 
 local function get(url)
-    write( "Connecting to " .. url .. "... " )
 
     local ok, err = http.checkURL( url )
     if not ok then
-        print( "Failed." )
         if err then
             printError( err )
         end
@@ -20,11 +18,8 @@ local function get(url)
 
     local response = http.get( url )
     if not response then
-        print( "Failed." )
         return nil
     end
-
-    print( "Success." )
 
     local sResponse = response.readAll()
     response.close()
@@ -38,7 +33,7 @@ local function download(url, path)
         file.write( res )
         file.close()
 
-        print( "Downloaded as "..path )
+        print( "Downloaded " .. path )
     end
 end
 
