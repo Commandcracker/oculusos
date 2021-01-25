@@ -336,6 +336,7 @@ if not CraftOS then
 	term.setBackgroundColor(colors.black)
 	term.clear()
 	term.setCursorPos(1,1)
+	shell.execute("register_programs")
 	shell.execute("shell")
 	if term.isColour() then
 		term.setTextColour( colours.yellow )

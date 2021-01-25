@@ -96,10 +96,17 @@ end
 
 download(url .. "startup.lua", "startup")
 download(url .. "shell.lua", "shell")
-download(url .. "matrix.lua", "matrix")
-download(url .. "cat.lua", "cat")
-download(url .. "touch.lua", "touch")
-download(url .. "pwd.lua", "pwd")
+download(url .. "register_programs.lua", "register_programs")
+
+local oculusos = shell.resolve( "oculusos" )
+fs.makeDir( oculusos )
+
+local programs = shell.resolve( oculusos .. "/programs" )
+
+download(url .. "programs/matrix.lua", programs .. "matrix.lua")
+download(url .. "programs/cat.lua", programs .. "cat.lua")
+download(url .. "programs/touch.lua", programs .. "touch.lua")
+download(url .. "programs/pwd.lua", programs .. "pwd.lua")
 
 print()
 
