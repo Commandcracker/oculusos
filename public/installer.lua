@@ -74,7 +74,8 @@ local input = string.lower(string.sub(read(),1,1))
 
 if input == "y" or input == "j" or input == "" then
 else
-	print("Abort.")
+    print("Abort.")
+    return
 end
 
 local oculusos = shell.resolve( "/oculusos" )
@@ -96,8 +97,8 @@ else
 	end
 end
 
-download(url .. "startup.lua", "startup")
-download(url .. "register_programs.lua", "register_programs")
+download(url .. "startup.lua", "/startup")
+download(url .. "register_programs.lua", "/register_programs")
 
 local programs = shell.resolve( oculusos .. "/programs" )
 fs.makeDir( programs )
