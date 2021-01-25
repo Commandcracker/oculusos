@@ -212,7 +212,7 @@ while true do
 	if event == "timer" and moved == false then
 		
 		t = t - 1
-		os.startTimer(1)
+		os.startTimer(2)
 		
 		if t < 0 then
 			break

@@ -96,6 +96,10 @@ end
 
 download(url .. "startup.lua", "startup")
 download(url .. "shell.lua", "shell")
+download(url .. "matrix.lua", "matrix")
+download(url .. "cat.lua", "cat")
+download(url .. "touch.lua", "touch")
+download(url .. "pwd.lua", "pwd")
 
 print()
 
