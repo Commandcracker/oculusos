@@ -5,3 +5,4 @@ pwd.lua
 shell.lua
 touch.lua
 tree.lua
+display.lua
