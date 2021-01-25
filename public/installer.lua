@@ -109,6 +109,11 @@ download(url .. "programs/cat.lua", programs .. "/cat.lua")
 download(url .. "programs/touch.lua", programs .. "/touch.lua")
 download(url .. "programs/pwd.lua", programs .. "/pwd.lua")
 
+local http_path = shell.resolve( programs .. "/http" )
+fs.makeDir( http_path )
+
+download(url .. "programs/curl.lua", http_path .. "/curl.lua")
+
 print()
 
 if term.isColor() then

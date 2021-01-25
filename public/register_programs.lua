@@ -27,6 +27,9 @@ end
 
 sPath = shell.path()
 sPath = sPath..":/oculusos/programs"
+if http then
+	sPath = sPath..":/oculusos/programs/http"
+end
 shell.setPath( sPath )
 
 shell.setCompletionFunction( "oculusos/programs/cat", completeFile )
