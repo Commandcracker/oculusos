@@ -37,19 +37,34 @@ local function question(question)
 end
 
 -- Run
-if pocket then
-    term.setTextColour(colors.red)
-    print("Hardware not supported!")
-    return
-end
-
 term.clear()
 term.setCursorPos(1,1)
 
 if question("Install OculusOS") then else
-    term.setTextColour(colors.red)
+    if term.isColor() then
+        term.setTextColour(colors.red)
+    end
     print("Abort.")
     return
+end
+
+-- Hardware not supported Check
+if pocket then
+    if term.isColor() then
+        term.setTextColour(colors.red)
+    end
+
+    print("Hardware not supported!")
+
+    term.setTextColour(colors.white)
+
+    if question("Continue") then else
+        if term.isColor() then
+            term.setTextColour(colors.red)
+        end
+        print("Abort.")
+        return
+    end
 end
 
 -- Download
@@ -63,7 +78,11 @@ local bootscreen = "bootscreen/"
 if turtle then
     bootscreen = bootscreen.."turtle/"
 else
-    bootscreen = bootscreen.."computer/"
+    if pocket then
+        bootscreen = bootscreen.."pocket/"
+    else
+        bootscreen = bootscreen.."computer/"
+    end
 end
 
 if term.isColor() then
