@@ -107,6 +107,7 @@ download(url .. "programs/cat.lua", programs .. "/cat.lua")
 download(url .. "programs/touch.lua", programs .. "/touch.lua")
 download(url .. "programs/pwd.lua", programs .. "/pwd.lua")
 download(url .. "programs/shell.lua", programs .. "/shell.lua")
+download(url .. "programs/tree.lua", programs .. "/tree.lua")
 
 local http_path = shell.resolve( programs .. "/http" )
 fs.makeDir( http_path )
