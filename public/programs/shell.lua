@@ -56,9 +56,9 @@ else
         term.setBackgroundColor( bgColour )
         term.setTextColour( promptColour )
 
-
-
-        term.setTextColour(colors.red)
+        if term.isColor() then
+            term.setTextColour(colors.red)
+        end
         write("root@")
         local sLabel = os.getComputerLabel()
         if not sLabel then
@@ -68,16 +68,14 @@ else
         end
         term.setTextColour(colors.white)
         write(":")
-        term.setTextColour(colors.blue)
+        if term.isColor() then
+            term.setTextColour(colors.blue)
+        end
         write("/" ..  shell.dir())
         term.setTextColour(colors.white)
         write("# ")
 
         term.setTextColour( textColour )
-
-
-
-
 
 		if settings then
 			local sLine

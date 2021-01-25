@@ -90,7 +90,9 @@ print()
 
 if question("Reboot now") then
     print()
-    term.setTextColor(colors.yellow)
+    if term.isColor() then
+        term.setTextColor(colors.yellow)
+    end
     print("Rebooting computer")
     sleep(3)
     os.reboot()
