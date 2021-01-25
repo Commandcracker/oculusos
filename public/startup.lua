@@ -11,7 +11,7 @@ end
 --Display
 term.setBackgroundColor(colors.black)
 term.clear()
-paintutils.drawImage(paintutils.loadImage("/oculusos/bootscreen.nfp"), 1, 1)
+paintutils.drawImage(paintutils.loadImage("/oculusos/bootscreen"), 1, 1)
 
 if pc == true then
 	term.setCursorPos(8,17)
@@ -65,7 +65,7 @@ while true do
 end
 
 term.clear()
-paintutils.drawImage(paintutils.loadImage("/oculusos/bootscreen.nfp"), 1, 1)
+paintutils.drawImage(paintutils.loadImage("/oculusos/bootscreen"), 1, 1)
 sleep(1)
 
 --Boot loader
