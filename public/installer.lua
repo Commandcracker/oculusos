@@ -101,12 +101,12 @@ download(url .. "register_programs.lua", "register_programs")
 local oculusos = shell.resolve( "oculusos" )
 fs.makeDir( oculusos )
 
-local programs = oculusos .. "/programs/"
+local programs = oculusos .. "/programs"
 
-download(url .. "programs/matrix.lua", programs .. "matrix.lua")
-download(url .. "programs/cat.lua", programs .. "cat.lua")
-download(url .. "programs/touch.lua", programs .. "touch.lua")
-download(url .. "programs/pwd.lua", programs .. "pwd.lua")
+download(url .. "programs/matrix.lua", programs .. "/matrix.lua")
+download(url .. "programs/cat.lua", programs .. "/cat.lua")
+download(url .. "programs/touch.lua", programs .. "/touch.lua")
+download(url .. "programs/pwd.lua", programs .. "/pwd.lua")
 
 print()
 
