@@ -1,8 +1,8 @@
-cat.lua
-echo.lua
-matrix.lua
-pwd.lua
-shell.lua
-touch.lua
-tree.lua
-display.lua
+cat
+echo
+matrix
+pwd
+shell
+touch
+tree
+display

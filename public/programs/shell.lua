@@ -79,13 +79,19 @@ else
 
 
 
-        local sLine
-        if settings.get( "shell.autocomplete" ) then
-            sLine = read( nil, tCommandHistory, shell.complete )
-        else
-            sLine = read( nil, tCommandHistory )
-        end
-        table.insert( tCommandHistory, sLine )
-        shell.run( sLine )
+		if settings then
+			local sLine
+			if settings.get( "shell.autocomplete" ) then
+				sLine = read( nil, tCommandHistory, shell.complete )
+			else
+				sLine = read( nil, tCommandHistory )
+			end
+			table.insert( tCommandHistory, sLine )
+			shell.run( sLine )
+		else
+			local sLine = read( nil, tCommandHistory, shell.complete )
+			table.insert( tCommandHistory, sLine )
+			shell.run( sLine )
+		end
     end
 end

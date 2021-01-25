@@ -72,7 +72,7 @@ else
     bootscreen = bootscreen.."default.nfp"
 end
 
-download(url..bootscreen, installation_path.."/bootscreen.nfp")
+download(url..bootscreen, installation_path.."/bootscreen")
 
 -- Startup
 download(url.."startup.lua", "/startup")
@@ -80,10 +80,10 @@ download(url.."register_programs.lua", "/register_programs")
 
 -- Programs
 for item in get(url.."programs/index"):gmatch("([^\n]*)\n?") do
-    download(url .. "programs/"..item, installation_path.."/programs/"..item)
+    download(url .. "programs/"..item..".lua", installation_path.."/programs/"..item)
 end
 
-download(url.."programs/http/curl.lua", installation_path .."/programs/http/curl.lua")
+download(url.."programs/http/curl.lua", installation_path .."/programs/http/curl")
 
 -- Finished
 print()
