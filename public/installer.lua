@@ -77,25 +77,24 @@ else
 	error("Abort.")
 end
 
-local file = "bootscreen"
+local file = "bootscreen.nfp"
 
 
 if term.isColor() then
 	if pc == true then
-		download(url .. "bootscreen/bootscreen_Color", file)
+		download(url .. "bootscreen/bootscreen_Color.nfp", file)
 	else
-		download(url .. "bootscreen/bootscreen_Turtle_Color", file)
+		download(url .. "bootscreen/bootscreen_Turtle_Color.nfp", file)
 	end
 else
 	if pc == true then
-		download(url .. "bootscreen/bootscreen_Turtle", file)
+		download(url .. "bootscreen/bootscreen_Turtle.nfp", file)
 	else
-		download(url .. "bootscreen/bootscreen", file)
+		download(url .. "bootscreen/bootscreen.nfp", file)
 	end
 end
 
 download(url .. "startup.lua", "startup")
-download(url .. "shell.lua", "shell")
 download(url .. "register_programs.lua", "register_programs")
 
 local oculusos = shell.resolve( "oculusos" )
@@ -108,6 +107,7 @@ download(url .. "programs/matrix.lua", programs .. "/matrix.lua")
 download(url .. "programs/cat.lua", programs .. "/cat.lua")
 download(url .. "programs/touch.lua", programs .. "/touch.lua")
 download(url .. "programs/pwd.lua", programs .. "/pwd.lua")
+download(url .. "programs/shell.lua", programs .. "/shell.lua")
 
 local http_path = shell.resolve( programs .. "/http" )
 fs.makeDir( http_path )

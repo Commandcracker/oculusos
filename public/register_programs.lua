@@ -1,36 +1,22 @@
-local function completeFile( shell, nIndex, sText, tPreviousText )
-    if nIndex == 1 then
-        return fs.complete( sText, shell.dir(), true, false )
+local sPath = ".:/oculusos/programs:/rom/programs"
+if term.isColor() then
+	sPath = sPath..":/rom/programs/advanced"
+end
+if turtle then
+	sPath = sPath..":/rom/programs/turtle"
+else
+    sPath = sPath..":/rom/programs/rednet:/rom/programs/fun"
+    if term.isColor() then
+    	sPath = sPath..":/rom/programs/fun/advanced"
     end
 end
-
-local function completeDir( shell, nIndex, sText, tPreviousText )
-    if nIndex == 1 then
-        return fs.complete( sText, shell.dir(), false, true )
-    end
+if pocket then
+    sPath = sPath..":/rom/programs/pocket"
 end
-
-local function completeEitherEither( shell, nIndex, sText, tPreviousText )
-    if nIndex == 1 then
-        local tResults = fs.complete( sText, shell.dir(), true, true )
-        for n=1,#tResults do
-            local sResult = tResults[n]
-            if string.sub( sResult, #sResult, #sResult ) ~= "/" then
-                tResults[n] = sResult .. " "
-            end
-        end
-        return tResults
-    elseif nIndex == 2 then
-        return fs.complete( sText, shell.dir(), true, true )
-    end
+if commands then
+    sPath = sPath..":/rom/programs/command"
 end
-
-sPath = shell.path()
-sPath = sPath..":/oculusos/programs"
 if http then
-	sPath = sPath..":/oculusos/programs/http"
+    sPath = sPath..":/oculusos/programs/http:/rom/programs/http"
 end
 shell.setPath( sPath )
-
-shell.setCompletionFunction( "oculusos/programs/cat", completeFile )
-shell.setCompletionFunction( "oculusos/programs/touch", completeEitherEither )
