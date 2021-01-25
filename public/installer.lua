@@ -1,21 +1,9 @@
--- Pc Check
-local w,h = term.getSize()
-if w == 51 and h == 19 then
-	pc = true
-else
-	pc = false
-end
+-- Variables
+local url = "https://commandcracker.gitlab.io/oculusos/"
+local installation_path = "/oculusos"
 
+-- Functions
 local function get(url)
-
-    local ok, err = http.checkURL( url )
-    if not ok then
-        if err then
-            printError( err )
-        end
-        return nil
-    end
-
     local response = http.get( url )
     if not response then
         return nil
@@ -27,103 +15,83 @@ local function get(url)
 end
 
 local function download(url, path)
-    local res = get( url )
+    local res = get(url)
     if res then
-        local file = fs.open( path, "w" )
-        file.write( res )
+        local file = fs.open(path, "w" )
+        file.write(res)
         file.close()
-
-        print( "Downloaded " .. path )
+        print(path)
     end
 end
 
-local url = "https://commandcracker.gitlab.io/oculusos/"
+local function question(question)
+    if question == nil then else
+        term.write(question.."? [Y/n] ")
+    end
+    local input = string.lower(string.sub(read(),1,1))
+    if input == "y" or input == "j" or input == "" then
+        return true
+    else 
+        return false
+    end
+end
 
---other suff idk
+-- Run
+if pocket then
+    term.setTextColour(colors.red)
+    print("Hardware not supported!")
+    return
+end
+
 term.clear()
 term.setCursorPos(1,1)
 
-term.write("Reading package lists")
-sleep(0.1)
-term.write(".")
-sleep(0.1)
-term.write(".")
-sleep(0.1)
-term.write(".")
-sleep(0.1)
-term.write(" Done")
-print()
-sleep(0.1)
-print("Building dependency tree")
-sleep(0.1)
-term.write("Reading state information")
-sleep(0.1)
-term.write(".")
-sleep(0.1)
-term.write(".")
-sleep(0.1)
-term.write(".")
-sleep(0.1)
-term.write(" Done")
-print()
-sleep(0.1)
-
-term.write("Do you want to continue? [Y/n] ")
-local input = string.lower(string.sub(read(),1,1))
-
-
-if input == "y" or input == "j" or input == "" then
-else
+if question("Install OculusOS") then else
+    term.setTextColour(colors.red)
     print("Abort.")
     return
 end
 
-local oculusos = shell.resolve( "/oculusos" )
-fs.makeDir( oculusos )
-
-local file = oculusos .. "/bootscreen.nfp"
-
-if term.isColor() then
-	if pc == true then
-		download(url .. "bootscreen/bootscreen_Color.nfp", file)
-	else
-		download(url .. "bootscreen/bootscreen_Turtle_Color.nfp", file)
-	end
-else
-	if pc == true then
-		download(url .. "bootscreen/bootscreen_Turtle.nfp", file)
-	else
-		download(url .. "bootscreen/bootscreen.nfp", file)
-	end
-end
-
-download(url .. "startup.lua", "/startup")
-download(url .. "register_programs.lua", "/register_programs")
-
-local programs = shell.resolve( oculusos .. "/programs" )
-fs.makeDir( programs )
-
-download(url .. "programs/matrix.lua", programs .. "/matrix.lua")
-download(url .. "programs/cat.lua", programs .. "/cat.lua")
-download(url .. "programs/touch.lua", programs .. "/touch.lua")
-download(url .. "programs/pwd.lua", programs .. "/pwd.lua")
-download(url .. "programs/shell.lua", programs .. "/shell.lua")
-download(url .. "programs/tree.lua", programs .. "/tree.lua")
-download(url .. "programs/echo.lua", programs .. "/echo.lua")
-
-local http_path = shell.resolve( programs .. "/http" )
-fs.makeDir( http_path )
-
-download(url .. "programs/http/curl.lua", http_path .. "/curl.lua")
-
+-- Download
+print()
+print("Downloading")
 print()
 
-if term.isColor() then
-	term.setTextColor(colors.yellow)
+-- Bootscreen
+local bootscreen = "bootscreen/"
+
+if turtle then
+    bootscreen = bootscreen.."turtle/"
+else
+    bootscreen = bootscreen.."computer/"
 end
 
-print("Rebooting computer")
+if term.isColor() then
+    bootscreen = bootscreen.."colord.nfp"
+else
+    bootscreen = bootscreen.."default.nfp"
+end
 
-sleep(3)
+download(url..bootscreen, installation_path.."/bootscreen.nfp")
 
-os.reboot()
+-- Startup
+download(url.."startup.lua", "/startup")
+download(url.."register_programs.lua", "/register_programs")
+
+-- Programs
+for item in get(url.."programs/index"):gmatch("([^\n]*)\n?") do
+    download(url .. "programs/"..item, installation_path.."/programs/"..item)
+end
+
+download(url.."programs/http/curl.lua", installation_path .."/programs/http/curl.lua")
+
+-- Finished
+print()
+
+if question("Reboot now") then
+    print()
+    term.setTextColor(colors.yellow)
+    print("Rebooting computer")
+    sleep(3)
+    os.reboot()
+end
