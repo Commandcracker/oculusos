@@ -249,7 +249,7 @@ function disk (disk,disk_name)
 		if term.isColor() then
 			term.setTextColor(colors.red)
 		end
-		term.write(disk_name.." not found starting: "..os.version())
+		term.write(disk_name.." not found starting: OculusOS")
 		sleep(2)
 	else
 		if not fs.exists("/"..disk.."/boot") then
@@ -259,7 +259,7 @@ function disk (disk,disk_name)
 			if term.isColor() then
 				term.setTextColor(colors.red)
 			end
-			term.write("Boot on "..disk_name.." not found starting: "..os.version())
+			term.write("Boot on "..disk_name.." not found starting: OculusOS")
 			sleep(2)
 		else
 			term.setBackgroundColor(colors.black)
@@ -272,7 +272,7 @@ function disk (disk,disk_name)
 				term.setTextColor(colors.yellow)
 			end
 			sleep(2)
-			term.write("Boot on "..disk_name.." done ore crashed starting: "..os.version())
+			term.write("Boot on "..disk_name.." done ore crashed starting: OculusOS")
 			sleep(2)
 		end
 	end
