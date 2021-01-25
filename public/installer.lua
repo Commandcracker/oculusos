@@ -112,7 +112,7 @@ download(url .. "programs/pwd.lua", programs .. "/pwd.lua")
 local http_path = shell.resolve( programs .. "/http" )
 fs.makeDir( http_path )
 
-download(url .. "programs/curl.lua", http_path .. "/curl.lua")
+download(url .. "programs/http/curl.lua", http_path .. "/curl.lua")
 
 print()
 
