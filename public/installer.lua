@@ -74,11 +74,13 @@ local input = string.lower(string.sub(read(),1,1))
 
 if input == "y" or input == "j" or input == "" then
 else
-	error("Abort.")
+	print("Abort.")
 end
 
-local file = "bootscreen.nfp"
+local oculusos = shell.resolve( "/oculusos" )
+fs.makeDir( oculusos )
 
+local file = oculusos .. "/bootscreen.nfp"
 
 if term.isColor() then
 	if pc == true then
@@ -96,9 +98,6 @@ end
 
 download(url .. "startup.lua", "startup")
 download(url .. "register_programs.lua", "register_programs")
-
-local oculusos = shell.resolve( "oculusos" )
-fs.makeDir( oculusos )
 
 local programs = shell.resolve( oculusos .. "/programs" )
 fs.makeDir( programs )
