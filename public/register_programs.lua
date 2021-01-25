@@ -26,7 +26,7 @@ local function completeEitherEither( shell, nIndex, sText, tPreviousText )
 end
 
 sPath = shell.path()
-sPath = sPath..":/"
+sPath = sPath..":/oculusos/programs"
 shell.setPath( sPath )
 
 shell.setCompletionFunction( "oculusos/programs/cat", completeFile )
