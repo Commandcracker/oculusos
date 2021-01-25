@@ -101,7 +101,7 @@ download(url .. "register_programs.lua", "register_programs")
 local oculusos = shell.resolve( "oculusos" )
 fs.makeDir( oculusos )
 
-local programs = shell.resolve( oculusos .. "/programs" )
+local programs = shell.resolve( oculusos .. "/programs/" )
 
 download(url .. "programs/matrix.lua", programs .. "matrix.lua")
 download(url .. "programs/cat.lua", programs .. "cat.lua")
