@@ -48,25 +48,6 @@ if question("Install OculusOS") then else
     return
 end
 
--- Hardware not supported Check
-if pocket then
-    if term.isColor() then
-        term.setTextColour(colors.red)
-    end
-
-    print("Hardware not supported!")
-
-    term.setTextColour(colors.white)
-
-    if question("Continue") then else
-        if term.isColor() then
-            term.setTextColour(colors.red)
-        end
-        print("Abort.")
-        return
-    end
-end
-
 -- Download
 print()
 print("Downloading")

@@ -4,12 +4,6 @@ local timer = 5
 local TermW,TermH = term.getSize()
 local CraftOS = false
 
-if turtle then
-    options = 3
-else
-	options = 8
-end
-
 --Functions--
 local function printCentred( yc, stg )
 	local xc = math.floor((TermW - string.len(stg)) / 2) + 1
@@ -55,6 +49,18 @@ local function disk (disk,disk_name)
 	end
 end
 
+local function usage_small(y)
+    printCentred(y, 'Use the keys "UP" and')
+    printCentred(y+1, '"DOWN" to mark an entry,')
+    printCentred(y+2 , '"ENTER" to boot of the')
+    printCentred(y+3 , "marked operating system.")
+end
+
+local function usage_long(y)
+    printCentred(y, 'Use the keys "UP" and "DOWN" to mark an entry,')
+    printCentred(y+1, '"ENTER" to boot of the marked operating system.')
+end
+
 local function menu() 
     local selected = 1
     local moved = false
@@ -72,7 +78,7 @@ local function menu()
         
         printCentred(2, "Oculus bootloader")
         
-        local _foptions = {
+        local options = {
             "OculusOS",
             os.version(),
             "Startup"
@@ -87,14 +93,14 @@ local function menu()
                 "Disk5"
             }
             for disk in ipairs(disks) do
-                table.insert(_foptions, disks[disk])
+                table.insert(options, disks[disk])
             end
         end
     
         if turtle and moved == false then else
-            for i in ipairs(_foptions) do
+            for i in ipairs(options) do
                 term.setCursorPos(4,5 + i)
-                term.write(" ".._foptions[i])
+                term.write(" "..options[i])
                 if not turtle and not pocket and moved == false and i == 5 then
                     break
                 end
@@ -106,50 +112,47 @@ local function menu()
             term.write("*")
         end
         
-        if moved then
-            printCentred(17, 'Use the keys "UP" and "DOWN" to mark an entry,')
-            printCentred(18, '"ENTER" to boot of the marked operating system.')
-        else
-            printCentred(14, 'Use the keys "UP" and "DOWN" to mark an entry,')
-            printCentred(15, '"ENTER" to boot of the marked operating system.')
-        end
-        
-        if moved == false and turtle then
-            printCentred(5, 'Use the keys "UP" and')
-            printCentred(6, '"DOWN" to mark an entry,')
-            printCentred(7 , '"ENTER" to boot of the')
-            printCentred(8 , "marked operating system.")
-        end
-        
-        if moved == false then
-            if turtle then
-                printCentred(11, "The highlighted entry is")
-                printCentred(12 , "automatically executed in "..timer.."s.")
-            else
-                printCentred(17, "The highlighted entry is automatically")
-                printCentred(18, "executed in "..timer.."s.")
-            end
-        end
-        
-        if moved == false then
-            if turtle then else
-                paintutils.drawBox(2,4,50,12,colors.white)
+        if pocket then
+            usage_small(12)
+            if not moved then
+                printCentred(18, "automatically")
+                printCentred(19, "executing in "..timer.."s.")
             end
         else
             if turtle then
-                paintutils.drawBox(2,4,38,10,colors.white)
+                if moved then
+                    printCentred(12, 'Use "UP" and "DOWN" to mark an entry,')
+                    printCentred(13, 'Press "ENTER" to boot from the entry')
+                else
+                    usage_small(5)
+                    printCentred(11, "The highlighted entry is")
+                    printCentred(12 , "automatically executed in "..timer.."s.")
+                end
             else
-                paintutils.drawBox(2,4,50,15,colors.white)
+                if moved then
+                    usage_long(17)
+                else
+                    usage_long(14)
+                    printCentred(17, "The highlighted entry is automatically")
+                    printCentred(18, "executed in "..timer.."s.")
+                end
             end
         end
         
+        if not turtle and not pocket and not moved then
+            paintutils.drawBox(2,4,TermW -1,12,colors.white)
+        else
+            if turtle and not moved then else
+                paintutils.drawBox(2,4,TermW -1,7 + #options,colors.white)
+            end
+        end
+
         --Event
         local event, key = os.pullEvent()
         
         --Timer
         if event == "timer" and moved == false then
             
-            print("TIMER")
             timer = timer - 1
             os.startTimer(2)
             
@@ -164,12 +167,12 @@ local function menu()
                 moved = true
                 selected = selected -1
                 if selected == 0 then
-                    selected = options
+                    selected = #options
                 end
             elseif key == 208 then
                 moved = true
                 selected = selected +1
-                if options < selected then
+                if #options < selected then
                     selected = 1
                 end
             elseif key == 28 then
