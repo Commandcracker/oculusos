@@ -17,12 +17,12 @@ term.clear()
 paintutils.drawImage(paintutils.loadImage("/oculusos/bootscreen"), 1, 1)
 
 if turtle then
-    draw(8,17, 27,17)
+    draw(4,11, 19,11)
 else
     if pocket then
         draw(10,10, 10,12)
-    else
-        draw(4,11, 19,11)
+	else
+		draw(8,17, 27,17)
     end
 end
 
