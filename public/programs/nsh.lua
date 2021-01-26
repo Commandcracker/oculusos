@@ -6,7 +6,7 @@ local nshAPI = {
 	connList = connections
 }
 
-local bufferDirs = {"/","/LyqydOS/","/usr/apis/","/disk/", "/oculusos/apis"}
+local bufferDirs = {"/","/LyqydOS/","/usr/apis/","/disk/", "/oculusos/apis/"}
 
 if not framebuffer then
 	for i = 1, #bufferDirs do
