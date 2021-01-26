@@ -1,6 +1,6 @@
 -- Variables
 os.startTimer(1)
-local timer = 5
+local timer = 3
 local TermW,TermH = term.getSize()
 local CraftOS = false
 
@@ -154,7 +154,7 @@ local function menu()
         if event == "timer" and moved == false then
             
             timer = timer - 1
-            os.startTimer(2)
+            os.startTimer(1)
             
             if timer < 0 then
                 return selected

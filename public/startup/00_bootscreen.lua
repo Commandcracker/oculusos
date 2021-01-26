@@ -1,7 +1,3 @@
--- Variables
-os.startTimer(1)
-local timer = 1
-
 -- Functions
 local function draw(x1,y1,x2,y2)
 	term.setCursorPos(x1,y1)
@@ -27,6 +23,7 @@ else
 end
 
 --Loop
+os.startTimer(1)
 while true do
 	
 	--Event
@@ -34,14 +31,7 @@ while true do
 	
 	--Timer
 	if event == "timer" then
-		
-		timer = timer - 1
-		os.startTimer(1)
-		
-		if timer < 0 then
-			break
-		end
-	
+		break
 	--Keys
 	elseif event == "key" then
 	
