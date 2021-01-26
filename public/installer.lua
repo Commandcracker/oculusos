@@ -1,6 +1,7 @@
 -- Variables
 local url = "https://commandcracker.gitlab.io/oculusos/"
 local installation_path = "/oculusos"
+local tArgs = { ... }
 
 -- Functions
 local function get(url)
@@ -40,7 +41,13 @@ end
 term.clear()
 term.setCursorPos(1,1)
 
-if question("Install OculusOS") then else
+if tArgs[1] then
+    _question = "Update OculusOS"
+else
+    _question = "Install OculusOS"
+end
+
+if question(_question) then else
     if term.isColor() then
         term.setTextColour(colors.red)
     end
@@ -92,6 +99,9 @@ end
 for item in get(url.."programs/http/index"):gmatch("([^\n]*)\n?") do
     download(url .. "programs/http/"..item..".lua", installation_path.."/programs/http/"..item)
 end
+
+-- version
+download(url.."version", installation_path.."/version")
 
 -- Finished
 print()

@@ -74,6 +74,52 @@ local function register_programs()
     shell.setPath( sPath )
 end
 
+local function get(url)
+    local response = http.get(url)
+    
+    if response then
+        local sResponse = response.readAll()
+        response.close()
+        return sResponse
+    else
+        print( "Failed." )
+    end
+end
+
+local function read_file(path)
+    if fs.exists( path ) then
+        local file = io.open( path, "r" )
+        local sLine = file:read()
+        file:close()
+        return sLine
+    end
+end
+
+local function update()
+    if http then
+        local url = "https://commandcracker.gitlab.io/oculusos/"
+        if not read_file("/version") == get(url.."version") then
+            local url_full = url.."installer.lua"
+            local tArgs = {
+                "Update"
+            }
+            local res = get(url_full)
+            
+            if res then
+                local func, err = load(res, url_full, "t", _ENV)
+                if not func then
+                    printError( err )
+                    return
+                end
+                local success, msg = pcall(func, table.unpack(tArgs, 1))
+                if not success then
+                    printError( msg )
+                end
+            end
+        end
+    end
+end
+
 local function usage_small(y)
     printCentred(y, 'Use the keys "UP" and')
     printCentred(y+1, '"DOWN" to mark an entry,')
@@ -268,7 +314,8 @@ if not CraftOS then
 	term.setBackgroundColor(colors.black)
 	term.clear()
 	term.setCursorPos(1,1)
-	register_programs()
+    register_programs()
+    update()
 	shell.run("shell")
 	if term.isColour() then
 		term.setTextColour( colours.yellow )
