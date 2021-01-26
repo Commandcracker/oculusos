@@ -102,7 +102,14 @@ for item in get(url.."programs/index"):gmatch("([^\n]*)\n?") do
     download(url .. "programs/"..item..".lua", installation_path.."/programs/"..item)
 end
 
-download(url.."programs/http/curl.lua", installation_path .."/programs/http/curl")
+for item in get(url.."programs/http/index"):gmatch("([^\n]*)\n?") do
+    download(url .. "programs/http/"..item..".lua", installation_path.."/programs/http/"..item)
+end
+
+-- APIS
+for item in get(url.."apis/index"):gmatch("([^\n]*)\n?") do
+    download(url .. "apis/"..item..".lua", installation_path.."apis/"..item)
+end
 
 -- Finished
 print()
