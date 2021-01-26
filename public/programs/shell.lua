@@ -14,6 +14,16 @@ local tAliases = (parentShell and parentShell.aliases()) or {}
 local tCompletionInfo = (parentShell and parentShell.getCompletionInfo()) or {}
 local tProgramStack = {}
 
+-- Custom Functions
+local function read_file(path)
+    if fs.exists( path ) then
+        local file = io.open( path, "r" )
+        local sLine = file:read()
+        file:close()
+        return sLine
+    end
+end
+
 -- Colours
 local promptColour, textColour, bgColour
 if term.isColour() then
@@ -41,7 +51,7 @@ else
     -- Print the header
     term.setBackgroundColor( bgColour )
     term.setTextColour( promptColour )
-    print( "OculusOS" )
+    print( "OculusOS "..read_file("/oculusos/version"))
     term.setTextColour( textColour )
 
     -- Run the startup program
