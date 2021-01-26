@@ -78,7 +78,6 @@ download(url..bootscreen, installation_path.."/bootscreen")
 for item in get(url.."startup/index"):gmatch("([^\n]*)\n?") do
     download(url .. "startup/"..item..".lua", "/startup/"..item)
 end
-download(url.."register_programs.lua", "/register_programs")
 
 -- APIS
 for item in get(url.."apis/index"):gmatch("([^\n]*)\n?") do

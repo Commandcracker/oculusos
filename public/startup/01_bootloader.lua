@@ -49,6 +49,31 @@ local function disk (disk,disk_name)
 	end
 end
 
+local function register_programs()
+    local sPath = ".:/oculusos/programs:/rom/programs"
+    if term.isColor() then
+        sPath = sPath..":/rom/programs/advanced"
+    end
+    if turtle then
+        sPath = sPath..":/rom/programs/turtle"
+    else
+        sPath = sPath..":/rom/programs/rednet:/rom/programs/fun"
+        if term.isColor() then
+            sPath = sPath..":/rom/programs/fun/advanced"
+        end
+    end
+    if pocket then
+        sPath = sPath..":/rom/programs/pocket"
+    end
+    if commands then
+        sPath = sPath..":/rom/programs/command"
+    end
+    if http then
+        sPath = sPath..":/oculusos/programs/http:/rom/programs/http"
+    end
+    shell.setPath( sPath )
+end
+
 local function usage_small(y)
     printCentred(y, 'Use the keys "UP" and')
     printCentred(y+1, '"DOWN" to mark an entry,')
@@ -243,7 +268,7 @@ if not CraftOS then
 	term.setBackgroundColor(colors.black)
 	term.clear()
 	term.setCursorPos(1,1)
-	shell.run("register_programs")
+	register_programs()
 	shell.run("shell")
 	if term.isColour() then
 		term.setTextColour( colours.yellow )
