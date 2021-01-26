@@ -2,11 +2,11 @@ local args = { ... }
 
 local connections = {}
 
-local nshAPI = {
+local sshAPI = {
 	connList = connections
 }
 
-local bufferDirs = {"/","/LyqydOS/","/usr/apis/","/disk/", "/oculusos/apis/"}
+local bufferDirs = {"/oculusos/apis/","/","/usr/apis/","/disk/"}
 
 if not framebuffer then
 	for i = 1, #bufferDirs do
@@ -40,14 +40,14 @@ local function rawRecv(id, timeout)
 end
 
 
-nshAPI.getRemoteID = function()
+sshAPI.getRemoteID = function()
 	--check for connected clients with matching threads.
-	for cNum, cInfo in pairs(nshAPI.connList) do
+	for cNum, cInfo in pairs(sshAPI.connList) do
 		if cInfo and type(cInfo) == "table" and cInfo.thread == coroutine.running() then
 			if cNum == "localShell" then
 				--if we are a client running on the server, return the remote server ID.
-				if nshAPI.serverNum then
-					return nshAPI.serverNum
+				if sshAPI.serverNum then
+					return sshAPI.serverNum
 				else
 					return nil
 				end
@@ -56,31 +56,31 @@ nshAPI.getRemoteID = function()
 		end
 	end
 	--client running without local server, return remote server ID.
-	if nshAPI.serverNum then return nshAPI.serverNum end
+	if sshAPI.serverNum then return sshAPI.serverNum end
 	return nil
 end
 
-nshAPI.send = function(msg)
-	local id = nshAPI.getRemoteID()
+sshAPI.send = function(msg)
+	local id = sshAPI.getRemoteID()
 	if id then
 		return rawSend(id, msg)
 	end
 	return nil
 end
 
-nshAPI.receive = function(timeout)
-	return rawRecv(nshAPI.getRemoteID(), timeout)
+sshAPI.receive = function(timeout)
+	return rawRecv(sshAPI.getRemoteID(), timeout)
 end
 
-nshAPI.getClientCapabilities = function()
-	if nshAPI.clientCapabilities then return nshAPI.clientCapabilities end
-	nshAPI.send("SP:;clientCapabilities")
-	return nshAPI.receive(1)
+sshAPI.getClientCapabilities = function()
+	if sshAPI.clientCapabilities then return sshAPI.clientCapabilities end
+	sshAPI.send("SP:;clientCapabilities")
+	return sshAPI.receive(1)
 end
 
-nshAPI.getRemoteConnections = function()
+sshAPI.getRemoteConnections = function()
 	local remotes = {}
-	for cNum, cInfo in pairs(nshAPI.connList) do
+	for cNum, cInfo in pairs(sshAPI.connList) do
 		table.insert(remotes, cNum)
 		if cInfo.outbound then
 			table.insert(remotes, cInfo.outbound)
@@ -89,7 +89,7 @@ nshAPI.getRemoteConnections = function()
 	return remotes
 end
 
-nshAPI.packFile = function(path)
+sshAPI.packFile = function(path)
 	local data = {}
 	local count = 0
 	local handle = io.open(path, "rb")
@@ -126,7 +126,7 @@ nshAPI.packFile = function(path)
 	return table.concat(outputTable, "")
 end
 
-nshAPI.unpackAndSaveFile = function(path, data)
+sshAPI.unpackAndSaveFile = function(path, data)
 	local outputTable = {}
 	for i=1, #data, 4 do
 		local char1, char2, char3, char4 = string.byte(string.sub(data, i, i)), string.byte(string.sub(data, i + 1, i + 1)), string.byte(string.sub(data, i + 2, i + 2)), string.byte(string.sub(data, i + 3, i + 3))
@@ -445,7 +445,7 @@ local function newSession(conn, x, y, color)
 end
 
 if #args >= 1 and args[1] == "host" then
-	_G.nsh = nshAPI
+	_G.ssh = sshAPI
 	if not openModem() then return end
 	if term.current then
 		if args[4] then
@@ -505,7 +505,7 @@ if #args >= 1 and args[1] == "host" then
 						resumeThread(conn, event)
 					end
 				elseif packetType ~= "query" then
-					--usually, we would send a disconnect here, but this prevents one from hosting nsh and connecting to other computers.  Pass these to all shells as well.
+					--usually, we would send a disconnect here, but this prevents one from hosting ssh and connecting to other computers.  Pass these to all shells as well.
 					for cNum, cInfo in pairs(connections) do
 						resumeThread(cNum, event)
 					end
@@ -541,10 +541,10 @@ if #args >= 1 and args[1] == "host" then
 		end
 	end
 
-elseif #args <= 2 and nsh and nsh.getRemoteID() then
-	print(nsh.getRemoteID())
+elseif #args <= 2 and ssh and ssh.getRemoteID() then
+	print(ssh.getRemoteID())
 	--forwarding mode
-	local conns = nsh.getRemoteConnections()
+	local conns = ssh.getRemoteConnections()
 	for i = 1, #conns do
 		if conns[i] == serverNum then
 			print("Cyclic connection refused.")
@@ -564,11 +564,11 @@ elseif #args <= 2 and nsh and nsh.getRemoteID() then
 		print("Connection Failed")
 		return
 	else
-		nsh.connList[nsh.getRemoteID()].outbound = serverNum
+		ssh.connList[ssh.getRemoteID()].outbound = serverNum
 		term.clear()
 		term.setCursorPos(1,1)
 	end
-	local clientID = nsh.getRemoteID()
+	local clientID = ssh.getRemoteID()
 	local serverID = tonumber(args[1])
 	while true do
 		event = {os.pullEvent()}
@@ -581,7 +581,7 @@ elseif #args <= 2 and nsh and nsh.getRemoteID() then
 			rednet.send(serverID, "EV:;"..textutils.serialize(event))
 		end
 	end
-	nsh.connList[nsh.getRemoteID()].outbound = nil
+	ssh.connList[ssh.getRemoteID()].outbound = nil
 	term.clear()
 	term.setCursorPos(1, 1)
 	print("Connection closed by server")
@@ -593,8 +593,8 @@ elseif #args >= 1 then --either no server running or we are the local shell on t
 		print("Server Not Found")
 		return
 	end
-	if nsh then
-		local conns = nsh.getRemoteConnections()
+	if ssh then
+		local conns = ssh.getRemoteConnections()
 		for i = 1, #conns do
 			if conns[i] == serverNum then
 				print("Connection refused.")
@@ -620,10 +620,10 @@ elseif #args >= 1 then --either no server running or we are the local shell on t
 			print("Connection failed.")
 			return
 		elseif event[1] == "rednet_message" and event[2] == serverNum and type(event[3]) == "string" and string.sub(event[3], 1, 2) == "SR" then
-			if nsh then nshAPI = nsh end
-			if nshAPI.connList and nshAPI.connList.localShell then nshAPI.connList.localShell.outbound = serverNum end
-			nshAPI.serverNum = serverNum
-			nshAPI.clientCapabilities = "-fileTransfer-extensions-"
+			if ssh then sshAPI = ssh end
+			if sshAPI.connList and sshAPI.connList.localShell then sshAPI.connList.localShell.outbound = serverNum end
+			sshAPI.serverNum = serverNum
+			sshAPI.clientCapabilities = "-fileTransfer-extensions-"
 			term.clear()
 			term.setCursorPos(1,1)
 			break
@@ -649,7 +649,7 @@ elseif #args >= 1 then --either no server running or we are the local shell on t
 					processText(serverNum, packetType, message)
 				elseif packetType == "data" then
 					if message == "clientCapabilities" then
-						rednet.send(serverNum, nshAPI.clientCapabilities)
+						rednet.send(serverNum, sshAPI.clientCapabilities)
 					end
 				elseif packetType == "fileQuery" then
 					--send a file to the server
@@ -657,7 +657,7 @@ elseif #args >= 1 then --either no server running or we are the local shell on t
 					if fs.exists(file) then
 						send(serverNum, "fileHeader", file)
 						if mode == "b" then
-							local fileString = nshAPI.packFile(file)
+							local fileString = sshAPI.packFile(file)
 							send(serverNum, "fileData", "b="..fileString)
 						else
 							local handle = io.open(file, "r")
@@ -701,7 +701,7 @@ elseif #args >= 1 then --either no server running or we are the local shell on t
 				elseif packetType == "fileEnd" then
 					if fileTransferState and string.match(fileTransferState, "(.-):") == "receive_wait" then
 						if fileBinaryData then
-							local co = coroutine.create(nshAPI.unpackAndSaveFile)
+							local co = coroutine.create(sshAPI.unpackAndSaveFile)
 							coroutine.resume(co, string.match(fileTransferState, ":(.*)"), fileBinaryData)
 							if coroutine.status(co) ~= "dead" then
 								table.insert(unpackCo, co)
@@ -723,8 +723,8 @@ elseif #args >= 1 then --either no server running or we are the local shell on t
 					term.clear()
 					term.setCursorPos(1, 1)
 					print("Connection closed by server.")
-					nshAPI.serverNum = nil
-					if nshAPI.connList and nshAPI.connList.localShell then nshAPI.connList.localShell.outbound = nil end
+					sshAPI.serverNum = nil
+					if sshAPI.connList and sshAPI.connList.localShell then sshAPI.connList.localShell.outbound = nil end
 					return
 				end
 			end
@@ -732,8 +732,8 @@ elseif #args >= 1 then --either no server running or we are the local shell on t
 			--pack up event
 			send(serverNum, "event", textutils.serialize(event))
 		elseif event[1] == "terminate" then
-			nshAPI.serverNum = nil
-			if nshAPI.localShell then nshAPI.localShell.outbound = nil end
+			sshAPI.serverNum = nil
+			if sshAPI.localShell then sshAPI.localShell.outbound = nil end
 			term.clear()
 			term.setCursorPos(1, 1)
 			print("Connection closed locally.")
@@ -741,6 +741,6 @@ elseif #args >= 1 then --either no server running or we are the local shell on t
 		end
 	end
 else
-	print("Usage: nsh <serverID> [resume]")
-	print("       nsh host [remote [local [name]]]")
+	print("Usage: ssh <serverID> [resume]")
+	print("       ssh host [remote [local [name]]]")
 end

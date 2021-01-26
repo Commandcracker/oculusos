@@ -50,6 +50,7 @@ local function disk (disk,disk_name)
 end
 
 local function register_programs()
+    -- Setup paths
     local sPath = ".:/oculusos/programs:/rom/programs"
     if term.isColor() then
         sPath = sPath..":/rom/programs/advanced"
@@ -72,6 +73,14 @@ local function register_programs()
         sPath = sPath..":/oculusos/programs/http:/rom/programs/http"
     end
     shell.setPath( sPath )
+    -- Setup aliases
+    shell.setAlias("cls", "clear")
+    -- Setup completion functions
+    local completion = require "cc.shell.completion"
+    shell.setCompletionFunction("oculusos/programs/cat", completion.build(completion.file))
+    shell.setCompletionFunction("oculusos/programs/display", completion.build(completion.file))
+    shell.setCompletionFunction("oculusos/programs/touch", completion.build(completion.file))
+    shell.setCompletionFunction("oculusos/programs/tree", completion.build(completion.dir))
 end
 
 local function get(url)

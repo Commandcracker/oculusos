@@ -6,4 +6,4 @@ shell
 touch
 tree
 display
-nsh
+ssh
