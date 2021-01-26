@@ -94,8 +94,15 @@ end
 download(url..bootscreen, installation_path.."/bootscreen")
 
 -- Startup
-download(url.."startup.lua", "/startup")
+for item in get(url.."startup/index"):gmatch("([^\n]*)\n?") do
+    download(url .. "startup/"..item..".lua", installation_path.."/startup/"..item)
+end
 download(url.."register_programs.lua", "/register_programs")
+
+-- APIS
+for item in get(url.."apis/index"):gmatch("([^\n]*)\n?") do
+    download(url .. "apis/"..item..".lua", installation_path.."/apis/"..item)
+end
 
 -- Programs
 for item in get(url.."programs/index"):gmatch("([^\n]*)\n?") do
@@ -104,11 +111,6 @@ end
 
 for item in get(url.."programs/http/index"):gmatch("([^\n]*)\n?") do
     download(url .. "programs/http/"..item..".lua", installation_path.."/programs/http/"..item)
-end
-
--- APIS
-for item in get(url.."apis/index"):gmatch("([^\n]*)\n?") do
-    download(url .. "apis/"..item..".lua", installation_path.."/apis/"..item)
 end
 
 -- Finished
