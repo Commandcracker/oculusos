@@ -95,7 +95,7 @@ download(url..bootscreen, installation_path.."/bootscreen")
 
 -- Startup
 for item in get(url.."startup/index"):gmatch("([^\n]*)\n?") do
-    download(url .. "startup/"..item..".lua", installation_path.."/startup/"..item)
+    download(url .. "startup/"..item..".lua", "/startup/"..item)
 end
 download(url.."register_programs.lua", "/register_programs")
 
