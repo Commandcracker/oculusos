@@ -98,7 +98,7 @@ end
 local function update()
     if http then
         local url = "https://commandcracker.gitlab.io/oculusos/"
-        if not read_file("/oculusos/version") == get(url.."version") then
+        if read_file("/oculusos/version") == get(url.."version") then else
             local url_full = url.."installer.lua"
             local tArgs = {
                 "Update"
