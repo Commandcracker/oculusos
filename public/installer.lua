@@ -108,7 +108,7 @@ end
 
 -- APIS
 for item in get(url.."apis/index"):gmatch("([^\n]*)\n?") do
-    download(url .. "apis/"..item..".lua", installation_path.."apis/"..item)
+    download(url .. "apis/"..item..".lua", installation_path.."/apis/"..item)
 end
 
 -- Finished
