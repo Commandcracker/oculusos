@@ -88,6 +88,14 @@ local function register_programs()
     shell.setCompletionFunction("oculusos/programs/display", completion.build(completion.file))
     shell.setCompletionFunction("oculusos/programs/touch", completion.build(completion.file))
     shell.setCompletionFunction("oculusos/programs/tree", completion.build(completion.dir))
+
+    local tPath = "/oculusos/apis/"
+    local tAll = fs.list("/oculusos/apis/")
+
+    for item in pairs(tAll) do
+        os.loadAPI(tPath..tAll[item])
+    end
+
 end
 
 local function get(url)
@@ -334,7 +342,7 @@ if not CraftOS then
     register_programs()
     update()
 
-    if not fs.exists( "/oculusos/passwd" ) then
+    if not fs.exists( "/oculusos/.passwd" ) then
         print("the 'root' user password has not been changed.")
         print("This is a security risk - please login as 'root'")
         print("and type 'passwd' to set a new password.")

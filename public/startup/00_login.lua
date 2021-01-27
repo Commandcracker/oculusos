@@ -12,11 +12,15 @@ local function read_file(path)
 end
 
 local passwd = "toor"
-local password_path = "/oculusos/passwd"
+local password_path = "/oculusos/.passwd"
+
+os.loadAPI("/oculusos/apis/base64")
 
 if fs.exists( password_path ) then
-    passwd = read_file(password_path)
+    passwd = base64.decode(read_file(password_path))
 end
+
+os.unloadAPI("base64")
 
 -- Main
 term.setBackgroundColor(colors.black)
@@ -38,4 +42,3 @@ while true do
 		print("User Not Found!")
 	end
 end
-

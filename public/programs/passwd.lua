@@ -15,10 +15,10 @@ local function write_file(path, line)
 end
 
 local passwd = "toor"
-local password_path = shell.resolve("/oculusos/passwd")
+local password_path = shell.resolve("/oculusos/.passwd")
 
 if fs.exists( password_path ) then
-    passwd = read_file(password_path)
+    passwd = base64.decode(read_file(password_path))
 end
 
 print("Changing password for root.")
@@ -31,7 +31,7 @@ if input == passwd then
     if input == "" or string.len(input) < 4 then
         print("New Password dos not match the requirements")
     else
-        write_file(password_path, input)
+        write_file(password_path, base64.encode(input))
         print("Password Changed")
     end
 else

@@ -115,6 +115,10 @@ if not tArgs[1] then
     print('default user = "root"')
     print('default passwd = "toor"')
     print()
+    if settings then
+        settings.set("shell.allow_disk_startup")
+        settings.save()
+    end
 end
 
 if question("Reboot now") then
