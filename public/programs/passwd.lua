@@ -31,7 +31,7 @@ input = read('*')
 if input == passwd then
     term.write("New Password: ")
     input = read('*')
-    if input == "" or string.len(input) =< 4 then
+    if input == "" or string.len(input) < 3 then
         print("New Password dos not match the requirements")
     else
         write_file(passwd_path, input)
