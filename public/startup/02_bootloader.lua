@@ -330,6 +330,13 @@ if not CraftOS then
 	term.setCursorPos(1,1)
     register_programs()
     update()
+
+    if fs.exists( "/oculusos/passwd" ) then
+        print("the 'root' user password has not been changed.")
+        print("This is a security risk - please login as 'root'")
+        print("and type 'passwd' to set a new password.")
+    end
+
 	shell.run("shell")
 	if term.isColour() then
 		term.setTextColour( colours.yellow )

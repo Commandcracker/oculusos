@@ -9,9 +9,6 @@ local function read_file(path)
 end
 
 local function write_file(path, line)
-    if not fs.exists( path ) then
-        create_file(path)
-    end
     file = fs.open(path, 'w')
     file.writeLine(line)
     file:close()
@@ -31,7 +28,7 @@ input = read('*')
 if input == passwd then
     term.write("New Password: ")
     input = read('*')
-    if input == "" or string.len(input) < 3 then
+    if input == "" or string.len(input) < 4 then
         print("New Password dos not match the requirements")
     else
         write_file(password_path, input)
