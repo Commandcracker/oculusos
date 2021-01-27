@@ -76,6 +76,9 @@ local function register_programs()
     if http then
         sPath = sPath..":/oculusos/programs/http:/rom/programs/http"
     end
+    if not pocket then
+        sPath = sPath..":/oculusos/programs/not_pocket"
+    end
     shell.setPath( sPath )
     -- Setup aliases
     shell.setAlias("cls", "clear")

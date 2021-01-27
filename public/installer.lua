@@ -100,6 +100,12 @@ for item in get(url.."programs/http/index"):gmatch("([^\n]*)\n?") do
     download(url .. "programs/http/"..item..".lua", installation_path.."/programs/http/"..item)
 end
 
+if not pocket then
+    for item in get(url.."programs/not_pocket/index"):gmatch("([^\n]*)\n?") do
+        download(url .. "programs/not_pocket/"..item..".lua", installation_path.."/programs/not_pocket/"..item)
+    end
+end
+
 -- version
 download(url.."version", installation_path.."/version")
 
