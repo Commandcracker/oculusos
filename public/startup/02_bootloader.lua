@@ -331,7 +331,7 @@ if not CraftOS then
     register_programs()
     update()
 
-    if fs.exists( "/oculusos/passwd" ) then
+    if not fs.exists( "/oculusos/passwd" ) then
         print("the 'root' user password has not been changed.")
         print("This is a security risk - please login as 'root'")
         print("and type 'passwd' to set a new password.")
