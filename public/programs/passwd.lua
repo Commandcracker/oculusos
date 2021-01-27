@@ -34,7 +34,7 @@ if input == passwd then
     if input == "" or string.len(input) < 3 then
         print("New Password dos not match the requirements")
     else
-        write_file(passwd_path, input)
+        write_file(password_path, input)
         print("Password Changed")
     end
 else
