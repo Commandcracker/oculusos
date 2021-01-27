@@ -115,7 +115,7 @@ if not tArgs[1] then
     print('default user = "root"')
     print('default passwd = "toor"')
     print()
-    if settings then
+    if settings and not pocket then
         settings.set("shell.allow_disk_startup", false)
         settings.save()
     end
