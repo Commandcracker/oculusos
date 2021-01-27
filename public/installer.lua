@@ -116,7 +116,7 @@ if not tArgs[1] then
     print('default passwd = "toor"')
     print()
     if settings then
-        settings.set("shell.allow_disk_startup")
+        settings.set("shell.allow_disk_startup", false)
         settings.save()
     end
 end
