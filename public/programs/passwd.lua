@@ -18,7 +18,7 @@ local function write_file(path, line)
 end
 
 local passwd = "toor"
-local password_path = "/oculusos/passwd"
+local password_path = shell.resolve("/oculusos/passwd")
 
 if fs.exists( password_path ) then
     passwd = read_file(password_path)
