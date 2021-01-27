@@ -9,7 +9,7 @@ local function read_file(path)
 end
 
 local function write_file(path, line)
-    if fs.exists( path ) then
+    if not fs.exists( path ) then
         create_file(path)
     end
     file = fs.open(path, 'w')
