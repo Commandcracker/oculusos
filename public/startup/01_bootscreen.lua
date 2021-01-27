@@ -1,3 +1,7 @@
+-- Global Variables
+oldOsPullEvent = os.pullEvent
+os.pullEvent = os.pullEventRaw
+
 -- Functions
 local function draw(x1,y1,x2,y2)
 	term.setCursorPos(x1,y1)
@@ -25,7 +29,6 @@ end
 --Loop
 os.startTimer(1)
 while true do
-	
 	--Event
 	local event, key = os.pullEvent()
 	
@@ -59,3 +62,4 @@ sleep(1)
 term.setBackgroundColor(colors.black)
 term.clear()
 term.setCursorPos(1,1)
+os.pullEvent = oldOsPullEvent

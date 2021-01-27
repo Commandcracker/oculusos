@@ -1,3 +1,7 @@
+-- Global Variables
+oldOsPullEvent = os.pullEvent
+os.pullEvent = os.pullEventRaw
+
 -- Variables
 os.startTimer(1)
 local timer = 3
@@ -266,6 +270,7 @@ end
 -- Run
 term.clear()
 selected = menu()
+os.pullEvent = oldOsPullEvent
 
 -- CraftOS
 if selected == 2 then

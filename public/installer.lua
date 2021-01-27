@@ -105,6 +105,11 @@ download(url.."version", installation_path.."/version")
 
 -- Finished
 print()
+if not tArgs[1] then
+    print('default user = "root"')
+    print('default passwd = "toor"')
+    print()
+end
 
 if question("Reboot now") then
     print()
