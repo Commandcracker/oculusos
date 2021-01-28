@@ -17,21 +17,22 @@ end
 local passwd = "toor"
 local password_path = shell.resolve("/oculusos/.passwd")
 
-if fs.exists( password_path ) then
-    passwd = base64.decode(read_file(password_path))
-end
-
 print("Changing password for root.")
 term.write("Current Password: ")
 input = read('*')
+
+if fs.exists( password_path ) then
+    passwd = read_file(password_path)
+    input = sha256.sha256(input)
+end
 
 if input == passwd then
     term.write("New Password: ")
     input = read('*')
     if input == "" or string.len(input) < 4 then
-        print("New Password dos not match the requirements")
+        print("Password must be 4 characters or more")
     else
-        write_file(password_path, base64.encode(input))
+        write_file(password_path, sha256.sha256(input))
         print("Password Changed")
     end
 else

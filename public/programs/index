@@ -8,3 +8,5 @@ tree
 display
 ssh
 passwd
+encrypt
+decrypt

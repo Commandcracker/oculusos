@@ -14,13 +14,7 @@ end
 local passwd = "toor"
 local password_path = "/oculusos/.passwd"
 
-os.loadAPI("/oculusos/apis/base64")
-
-if fs.exists( password_path ) then
-    passwd = base64.decode(read_file(password_path))
-end
-
-os.unloadAPI("base64")
+os.loadAPI("/oculusos/apis/sha256")
 
 -- Main
 term.setBackgroundColor(colors.black)
@@ -32,8 +26,15 @@ while true do
 	if input == "root" then
 		term.write("Password: ")
 		input = read('*')
+
+		if fs.exists( password_path ) then
+			passwd = read_file(password_path)
+			input = sha256.sha256(input)
+		end
+
 		if input == passwd then
 			os.pullEvent = oldOsPullEvent
+			os.unloadAPI("sha256")
 			return
 		else
 			print("Incorrect password!")
