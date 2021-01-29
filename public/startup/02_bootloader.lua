@@ -343,9 +343,7 @@ if not CraftOS then
     update()
 
     if not fs.exists( "/oculusos/.passwd" ) then
-        print("the 'root' user password has not been changed.")
-        print("This is a security risk - please login as 'root'")
-        print("and type 'passwd' to set a new password.")
+        print("No Password has been set. This is a security risk - please type 'passwd' to set a password.")
     end
 
 	shell.run("shell")

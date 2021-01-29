@@ -111,14 +111,9 @@ download(url.."version", installation_path.."/version")
 
 -- Finished
 print()
-if not tArgs[1] then
-    print('default user = "root"')
-    print('default passwd = "toor"')
-    print()
-    if settings and not pocket then
-        settings.set("shell.allow_disk_startup", false)
-        settings.save()
-    end
+if not tArgs[1] and settings and not pocket then
+    settings.set("shell.allow_disk_startup", false)
+    settings.save()
 end
 
 if question("Reboot now") then

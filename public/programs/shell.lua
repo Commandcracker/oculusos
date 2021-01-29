@@ -69,7 +69,6 @@ else
         if term.isColor() then
             term.setTextColour(colors.red)
         end
-        write("root@")
         local sLabel = os.getComputerLabel()
         if not sLabel then
             write("oculusos")

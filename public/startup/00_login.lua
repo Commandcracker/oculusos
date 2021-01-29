@@ -11,35 +11,24 @@ local function read_file(path)
     end
 end
 
-local passwd = "toor"
-local password_path = "/oculusos/.passwd"
-
 os.loadAPI("/oculusos/apis/sha256")
 
 -- Main
 term.setBackgroundColor(colors.black)
 term.clear()
 term.setCursorPos(1,1)
-while true do
-	term.write("oculusos login: ")
-	input = read()
-	if input == "root" then
+
+if fs.exists( "/oculusos/.passwd" ) then
+	while true do
 		term.write("Password: ")
 		input = read('*')
-
-		if fs.exists( password_path ) then
-			passwd = read_file(password_path)
-			input = sha256.sha256(input)
-		end
-
-		if input == passwd then
-			os.pullEvent = oldOsPullEvent
-			os.unloadAPI("sha256")
-			return
+		if sha256.sha256(input) == read_file("/oculusos/.passwd") then
+			break
 		else
 			print("Incorrect password!")
 		end
-	else
-		print("User Not Found!")
 	end
 end
+
+os.unloadAPI("sha256")
+os.pullEvent = oldOsPullEvent

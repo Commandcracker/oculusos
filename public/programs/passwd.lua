@@ -14,27 +14,29 @@ local function write_file(path, line)
     file:close()
 end
 
-local passwd = "toor"
 local password_path = shell.resolve("/oculusos/.passwd")
 
-print("Changing password for root.")
-term.write("Current Password: ")
-input = read('*')
-
 if fs.exists( password_path ) then
-    passwd = read_file(password_path)
-    input = sha256.sha256(input)
+    term.write("Current Password: ")
+    local passwd = read('*')
+    if not sha256.sha256(passwd) == read_file(password_path) then
+        print("Incorrect password!")
+        return
+    end
 end
 
-if input == passwd then
-    term.write("New Password: ")
-    input = read('*')
-    if input == "" or string.len(input) < 4 then
-        print("Password must be 4 characters or more")
-    else
-        write_file(password_path, sha256.sha256(input))
-        print("Password Changed")
-    end
+term.write("New Password: ")
+local new_passwd = read('*')
+if string.len(new_passwd) < 4 then
+    print("Password must be 4 characters or more")
+    return
+end
+
+term.write("Repet Password: ")
+local repet_passwd = read('*')
+if new_passwd == repet_passwd then
+    write_file(password_path, sha256.sha256(repet_passwd))
+    print("Password Changed")
 else
-    print("Incorrect password!")
+    print("Password does not match")
 end
