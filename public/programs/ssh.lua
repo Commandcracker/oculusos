@@ -446,7 +446,10 @@ end
 
 if #args >= 1 and args[1] == "host" then
 	_G.ssh = sshAPI
-	if not openModem() then return end
+	if not openModem() then
+		print("No modems found. 1 required.")
+		return 
+	end
 	if term.current then
 		if args[4] then
 			rednet.host("tror", args[4])
@@ -587,7 +590,10 @@ elseif #args <= 2 and ssh and ssh.getRemoteID() then
 	print("Connection closed by server")
 
 elseif #args >= 1 then --either no server running or we are the local shell on the server.
-	if not openModem() then return end
+	if not openModem() then
+		print("No modems found. 1 required.")
+		return 
+	end
 	local serverNum = getServerID(args[1])
 	if not serverNum then
 		print("Server Not Found")
