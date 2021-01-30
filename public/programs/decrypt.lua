@@ -1,21 +1,3 @@
-print("This Program is not completed!")
-return
-
-local function read_file(path)
-    if fs.exists( path ) then
-        local file = fs.open( path, "r" )
-        local sLine = file.readAll()
-        file.close()
-        return sLine
-    end
-end
-
-local function write_file(path, line)
-    file = fs.open(path, 'w')
-    file.write(line)
-    file:close()
-end
-
 local function question(question)
     if question == nil then else
         term.write(question.."? [Y/n] ")
@@ -28,33 +10,54 @@ local function question(question)
     end
 end
 
-local function decrypt_file(key, file)
+local function decrypt_file(file, key)
+    print(file)
+
     if not string.find(file, ".crypt") then
-        print(file)
         print("is already decrypted")
         if not question("Continue") then
             return
         end
     end
 
-    local decrypt = aes.decrypt(key, read_file(file), aes.AES256, aes.CBCMODE)
-    if decrypt then
-        write_file(string.gsub(file, ".crypt", ''), decrypt)
-        fs.delete(file)
-        print("decrypted: " .. file)
-    else
-        print("decryption Faild: " .. file)
+    local in_file = io.open( file, "r" )
+    local sLine = in_file:read()
+    local out_file = fs.open( string.gsub(file, ".crypt", ''), "w" )
+
+    while sLine do
+        out_file.flush()
+        in_file:flush()
+
+        if sLine == nil or sLine:match("%S") == nil then
+            out_file.writeLine()
+        else
+            local decrypt = aes.decrypt(key, base64.decode(sLine), aes.AES256, aes.CBCMODE)
+            if decrypt then
+                out_file.writeLine(decrypt)
+            else
+                print("faild")
+            end
+        end
+
+        sLine = in_file:read()
     end
+    out_file.close()
+    in_file:close()
+    fs.delete(file)
 end
 
-local function do_4files(path, key)
-    for k, v in pairs( fs.list( path ) ) do
-        local v_path = path..'/'..v
-        if fs.isDir( v_path ) then
-            do_4files(v_path, key)
-        else
-            decrypt_file(key, v_path)
+local function loop(path, key)
+    if fs.isDir( path ) then
+        for k, v in pairs( fs.list( path ) ) do
+            local v_path = path..'/'..v
+            if fs.isDir( v_path ) then
+                loop(v_path, key)
+            else
+                decrypt_file(v_path, key)
+            end
         end
+    else
+        decrypt_file(path, key)
     end
 end
 
@@ -64,4 +67,4 @@ if #tArgs < 2 then
 	return
 end
 
-do_4files(shell.resolve(tArgs[1]), tArgs[2])
+loop(shell.resolve(tArgs[1]), tArgs[2])

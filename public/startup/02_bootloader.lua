@@ -88,6 +88,8 @@ local function register_programs()
     shell.setCompletionFunction("oculusos/programs/display", completion.build(completion.file))
     shell.setCompletionFunction("oculusos/programs/touch", completion.build(completion.file))
     shell.setCompletionFunction("oculusos/programs/tree", completion.build(completion.dir))
+    shell.setCompletionFunction("oculusos/programs/decrypt", completion.build(completion.dirOrFile))
+    shell.setCompletionFunction("oculusos/programs/encrypt", completion.build(completion.dirOrFile))
 
     local tPath = "/oculusos/apis/"
     local tAll = fs.list("/oculusos/apis/")
