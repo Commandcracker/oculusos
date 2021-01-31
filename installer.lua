@@ -1,5 +1,5 @@
 -- Variables
-local url = "https://raw.githubusercontent.com/Commandcracker/oculusos/master"
+local url = "https://raw.githubusercontent.com/Commandcracker/oculusos/master/"
 local installation_path = "/oculusos"
 local tArgs = { ... }
 
