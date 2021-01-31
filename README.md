@@ -8,7 +8,7 @@ wget https://pastebin.com/raw/KVPtqp0H pastebin
 ```
 Gitlab
 ```
-wget https://commandcracker.gitlab.io/oculusos/fix/pastebin.lua pastebin
+wget https://raw.githubusercontent.com/Commandcracker/oculusos/master/fix/pastebin.lua pastebin
 ```
 ## **ComputerCraft 1.76-**
 Pastebin
@@ -21,9 +21,9 @@ wget https://pastebin.com/raw/KVPtqp0H pastebin
 Gitlab
 ```lua
 lua
-local r = http.get("https://commandcracker.gitlab.io/oculusos/fix/wget.lua"); local f = fs.open( shell.resolve( "wget" ), "w" ); f.write( r.readAll() ); f.close(); r.close()
+local r = http.get("https://raw.githubusercontent.com/Commandcracker/oculusos/master/fix/wget.lua"); local f = fs.open( shell.resolve( "wget" ), "w" ); f.write( r.readAll() ); f.close(); r.close()
 exit()
-wget https://commandcracker.gitlab.io/oculusos/fix/pastebin.lua pastebin
+wget https://raw.githubusercontent.com/Commandcracker/oculusos/master/fix/pastebin.lua pastebin
 ```
 # Installation
 Pastebin
@@ -32,6 +32,6 @@ pastebin run cCENE9mc
 ```
 Gitlab
 ```
-wget https://commandcracker.gitlab.io/oculusos/installer.lua installer
+wget https://raw.githubusercontent.com/Commandcracker/oculusos/master/installer.lua installer
 installer
 ```

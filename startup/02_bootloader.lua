@@ -123,7 +123,7 @@ end
 
 local function update()
     if http then
-        local url = "https://commandcracker.gitlab.io/oculusos/"
+        local url = "https://raw.githubusercontent.com/Commandcracker/oculusos/master/"
         if read_file("/oculusos/version") == get(url.."version") then else
             local url_full = url.."installer.lua"
             local tArgs = {

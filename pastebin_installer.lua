@@ -1,4 +1,4 @@
--- https://gitlab.com/Commandcracker/oculusos
+-- https://github.com/Commandcracker/oculusos
 if not http then
     printError("oculusos requires the http API")
     printError("Set http_enable to true in ComputerCraft.cfg")
@@ -17,7 +17,7 @@ local function get(url)
     end
 end
 
-local url = "https://commandcracker.gitlab.io/oculusos/installer.lua"
+local url = "https://raw.githubusercontent.com/Commandcracker/oculusos/master/installer.lua"
 local tArgs = { ... }
 local res = get(url)
 
