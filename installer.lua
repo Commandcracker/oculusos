@@ -60,66 +60,82 @@ print()
 print("Downloading")
 print()
 
-parallel.waitForAll(
-    -- Bootscreen
-    function()
-        local bootscreen = "bootscreen/"
+local to_download = {}
 
-        if turtle then
-            bootscreen = bootscreen.."turtle/"
-        else
-            if pocket then
-                bootscreen = bootscreen.."pocket/"
-            else
-                bootscreen = bootscreen.."computer/"
-            end
-        end
-        
-        if term.isColor() then
-            bootscreen = bootscreen.."colord.nfp"
-        else
-            bootscreen = bootscreen.."default.nfp"
-        end
-        
-        download(url..bootscreen, installation_path.."/bootscreen")
-    end,
+-- Bootscreen
+local bootscreen = "bootscreen/"
+
+if turtle then
+    bootscreen = bootscreen.."turtle/"
+else
+    if pocket then
+        bootscreen = bootscreen.."pocket/"
+    else
+        bootscreen = bootscreen.."computer/"
+    end
+end
+
+if term.isColor() then
+    bootscreen = bootscreen.."colord.nfp"
+else
+    bootscreen = bootscreen.."default.nfp"
+end
+
+table.insert(to_download,function()
+    download(url..bootscreen, installation_path.."/bootscreen")
+end)
+
+parallel.waitForAll(table.unpack({
     -- Startup
     function()
         for item in get(url.."startup/index"):gmatch("([^\n]*)\n?") do
-            download(url .. "startup/"..item..".lua", "/startup/"..item)
+            table.insert(to_download,function()
+                download(url .. "startup/"..item..".lua", "/startup/"..item)
+            end)
         end
     end,
     -- APIS
     function()
         for item in get(url.."apis/index"):gmatch("([^\n]*)\n?") do
-            download(url .. "apis/"..item..".lua", installation_path.."/apis/"..item)
+            table.insert(to_download,function()
+                download(url .. "apis/"..item..".lua", installation_path.."/apis/"..item)
+            end)
         end
     end,
     -- Programs
     function()
         for item in get(url.."programs/index"):gmatch("([^\n]*)\n?") do
-            download(url .. "programs/"..item..".lua", installation_path.."/programs/"..item)
+            table.insert(to_download,function()
+                download(url .. "programs/"..item..".lua", installation_path.."/programs/"..item)
+            end)
         end
     end,
     -- Programs - http
     function()
         for item in get(url.."programs/http/index"):gmatch("([^\n]*)\n?") do
-            download(url .. "programs/http/"..item..".lua", installation_path.."/programs/http/"..item)
+            table.insert(to_download,function()
+                download(url .. "programs/http/"..item..".lua", installation_path.."/programs/http/"..item)
+            end)
         end
     end,
     -- Programs - not_pocket
     function()
         if not pocket then
             for item in get(url.."programs/not_pocket/index"):gmatch("([^\n]*)\n?") do
-                download(url .. "programs/not_pocket/"..item..".lua", installation_path.."/programs/not_pocket/"..item)
+                table.insert(to_download,function()
+                    download(url .. "programs/not_pocket/"..item..".lua", installation_path.."/programs/not_pocket/"..item)
+                end)
             end
         end
-    end,
-    -- version
-    function()
-        download(url.."version", installation_path.."/version")
     end
-)
+}))
+
+-- version
+table.insert(to_download,function()
+    download(url.."version", installation_path.."/version")
+end)
+
+parallel.waitForAll(table.unpack(to_download))
 
 -- Finished
 print()
