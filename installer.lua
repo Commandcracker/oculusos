@@ -60,54 +60,66 @@ print()
 print("Downloading")
 print()
 
--- Bootscreen
-local bootscreen = "bootscreen/"
+parallel.waitForAll(
+    -- Bootscreen
+    function()
+        local bootscreen = "bootscreen/"
 
-if turtle then
-    bootscreen = bootscreen.."turtle/"
-else
-    if pocket then
-        bootscreen = bootscreen.."pocket/"
-    else
-        bootscreen = bootscreen.."computer/"
+        if turtle then
+            bootscreen = bootscreen.."turtle/"
+        else
+            if pocket then
+                bootscreen = bootscreen.."pocket/"
+            else
+                bootscreen = bootscreen.."computer/"
+            end
+        end
+        
+        if term.isColor() then
+            bootscreen = bootscreen.."colord.nfp"
+        else
+            bootscreen = bootscreen.."default.nfp"
+        end
+        
+        download(url..bootscreen, installation_path.."/bootscreen")
+    end,
+    -- Startup
+    function()
+        for item in get(url.."startup/index"):gmatch("([^\n]*)\n?") do
+            download(url .. "startup/"..item..".lua", "/startup/"..item)
+        end
+    end,
+    -- APIS
+    function()
+        for item in get(url.."apis/index"):gmatch("([^\n]*)\n?") do
+            download(url .. "apis/"..item..".lua", installation_path.."/apis/"..item)
+        end
+    end,
+    -- Programs
+    function()
+        for item in get(url.."programs/index"):gmatch("([^\n]*)\n?") do
+            download(url .. "programs/"..item..".lua", installation_path.."/programs/"..item)
+        end
+    end,
+    -- Programs - http
+    function()
+        for item in get(url.."programs/http/index"):gmatch("([^\n]*)\n?") do
+            download(url .. "programs/http/"..item..".lua", installation_path.."/programs/http/"..item)
+        end
+    end,
+    -- Programs - not_pocket
+    function()
+        if not pocket then
+            for item in get(url.."programs/not_pocket/index"):gmatch("([^\n]*)\n?") do
+                download(url .. "programs/not_pocket/"..item..".lua", installation_path.."/programs/not_pocket/"..item)
+            end
+        end
+    end,
+    -- version
+    function()
+        download(url.."version", installation_path.."/version")
     end
-end
-
-if term.isColor() then
-    bootscreen = bootscreen.."colord.nfp"
-else
-    bootscreen = bootscreen.."default.nfp"
-end
-
-download(url..bootscreen, installation_path.."/bootscreen")
-
--- Startup
-for item in get(url.."startup/index"):gmatch("([^\n]*)\n?") do
-    download(url .. "startup/"..item..".lua", "/startup/"..item)
-end
-
--- APIS
-for item in get(url.."apis/index"):gmatch("([^\n]*)\n?") do
-    download(url .. "apis/"..item..".lua", installation_path.."/apis/"..item)
-end
-
--- Programs
-for item in get(url.."programs/index"):gmatch("([^\n]*)\n?") do
-    download(url .. "programs/"..item..".lua", installation_path.."/programs/"..item)
-end
-
-for item in get(url.."programs/http/index"):gmatch("([^\n]*)\n?") do
-    download(url .. "programs/http/"..item..".lua", installation_path.."/programs/http/"..item)
-end
-
-if not pocket then
-    for item in get(url.."programs/not_pocket/index"):gmatch("([^\n]*)\n?") do
-        download(url .. "programs/not_pocket/"..item..".lua", installation_path.."/programs/not_pocket/"..item)
-    end
-end
-
--- version
-download(url.."version", installation_path.."/version")
+)
 
 -- Finished
 print()
