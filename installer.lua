@@ -85,7 +85,7 @@ table.insert(to_download,function()
     download(url..bootscreen, installation_path.."/bootscreen")
 end)
 
-parallel.waitForAll(table.unpack({
+parallel.waitForAll(
     -- Startup
     function()
         for item in get(url.."startup/index"):gmatch("([^\n]*)\n?") do
@@ -128,7 +128,7 @@ parallel.waitForAll(table.unpack({
             end
         end
     end
-}))
+)
 
 -- version
 table.insert(to_download,function()
