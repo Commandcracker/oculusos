@@ -92,7 +92,7 @@ local function register_programs()
     shell.setCompletionFunction("oculusos/programs/encrypt", completion.build(completion.dirOrFile))
 
     local tPath = "/oculusos/apis/"
-    local tAll = fs.list("/oculusos/apis/")
+    local tAll = fs.list(tPath)
 
     for item in pairs(tAll) do
         os.loadAPI(tPath..tAll[item])
