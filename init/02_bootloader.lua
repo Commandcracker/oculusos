@@ -83,13 +83,17 @@ local function register_programs()
     -- Setup aliases
     shell.setAlias("cls", "clear")
     -- Setup completion functions
-    local completion = require "cc.shell.completion"
-    shell.setCompletionFunction("oculusos/programs/cat", completion.build(completion.file))
-    shell.setCompletionFunction("oculusos/programs/display", completion.build(completion.file))
-    shell.setCompletionFunction("oculusos/programs/touch", completion.build(completion.file))
-    shell.setCompletionFunction("oculusos/programs/tree", completion.build(completion.dir))
-    shell.setCompletionFunction("oculusos/programs/decrypt", completion.build(completion.dirOrFile))
-    shell.setCompletionFunction("oculusos/programs/encrypt", completion.build(completion.dirOrFile))
+    local function completion()
+        local completion = require "cc.shell.completion"
+        shell.setCompletionFunction("oculusos/programs/cat", completion.build(completion.file))
+        shell.setCompletionFunction("oculusos/programs/display", completion.build(completion.file))
+        shell.setCompletionFunction("oculusos/programs/touch", completion.build(completion.file))
+        shell.setCompletionFunction("oculusos/programs/tree", completion.build(completion.dir))
+        shell.setCompletionFunction("oculusos/programs/decrypt", completion.build(completion.dirOrFile))
+        shell.setCompletionFunction("oculusos/programs/encrypt", completion.build(completion.dirOrFile))
+    end
+
+    pcall(completion)
 
     local tPath = "/oculusos/apis/"
     local tAll = fs.list(tPath)
