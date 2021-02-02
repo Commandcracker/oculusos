@@ -85,6 +85,11 @@ table.insert(to_download,function()
     download(url..bootscreen, installation_path.."/bootscreen")
 end)
 
+-- Startup
+table.insert(to_download,function()
+    download(url.."startup.lua", "/startup")
+end)
+
 -- Programs - fix
 if not fs.exists("/rom/programs/http/wget") then
     table.insert(to_download,function()
@@ -95,9 +100,9 @@ end
 parallel.waitForAll(
     -- Startup
     function()
-        for item in get(url.."startup/index"):gmatch("([^\n]*)\n?") do
+        for item in get(url.."init/index"):gmatch("([^\n]*)\n?") do
             table.insert(to_download,function()
-                download(url .. "startup/"..item..".lua", "/startup/"..item)
+                download(url .. "init/"..item..".lua", installation_path.."/init/"..item)
             end)
         end
     end,
