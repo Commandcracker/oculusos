@@ -37,6 +37,19 @@ local function question(question)
     end
 end
 
+function split(string, delimiter)
+    local result = { }
+    local from = 1
+    local delim_from, delim_to = string.find( string, delimiter, from )
+    while delim_from do
+        table.insert( result, string.sub( string, from , delim_from-1 ) )
+        from = delim_to + 1
+        delim_from, delim_to = string.find( string, delimiter, from )
+    end
+    table.insert( result, string.sub( string, from ) )
+    return result
+end
+
 -- Run
 term.clear()
 term.setCursorPos(1,1)
@@ -94,6 +107,12 @@ end)
 if not fs.exists("/rom/programs/http/wget") then
     table.insert(to_download,function()
         download(url .. "fix/wget.lua", installation_path.."/programs/http/wget")
+    end)
+end
+
+if tonumber(split(os.version(), ' ')[2]) <= 1.7 then
+    table.insert(to_download,function()
+        download(url .. "fix/pastebin.lua", installation_path.."/programs/http/pastebin")
     end)
 end
 
