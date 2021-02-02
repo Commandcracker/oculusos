@@ -85,6 +85,13 @@ table.insert(to_download,function()
     download(url..bootscreen, installation_path.."/bootscreen")
 end)
 
+-- Programs - fix
+if not fs.exists("/rom/programs/http/wget") then
+    table.insert(to_download,function()
+        download(url .. "fix/wget.lua", installation_path.."/programs/http/wget")
+    end)
+end
+
 parallel.waitForAll(
     -- Startup
     function()
