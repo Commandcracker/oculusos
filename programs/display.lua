@@ -6,14 +6,14 @@ end
 
 local sPath = shell.resolve( tArgs[1] )
 if fs.exists( sPath ) and fs.isDir( sPath ) then
-	print( "Cannot display a directory." )
+	printError( "Cannot display a directory." )
 	return
 end
 
 if fs.exists( sPath ) then
     paintutils.drawImage(paintutils.loadImage(sPath), 1, 1)
 else
-    print( "file not found" )
+    printError( "file not found" )
     return
 end
 

@@ -14,8 +14,8 @@ if not fs.isReadOnly( sPath ) then
     return
 else
     if fs.isDir( sPath ) then
-        print("folder is read only")
+        printError("folder is read only")
     else
-        print("file is read only")
+        printError("file is read only")
     end
 end

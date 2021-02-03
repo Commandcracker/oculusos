@@ -24,14 +24,14 @@ end
 
 local sName = tArgs[1]
 if peripheral.getType( sName ) ~= "monitor" then
-	print( "No monitor named ".. sName )
+	printError( "No monitor named ".. sName )
 	return
 end
 
 local sProgram = tArgs[2]
 local sPath = shell.resolveProgram( sProgram )
 if sPath == nil then
-	print( "No such program: "..sProgram )
+	printError( "No such program: "..sProgram )
 	return
 end
 
@@ -39,7 +39,6 @@ local fMain = function()
     shell.run( sPath, table.unpack( tArgs, 3 ) )
 end 
 
- 
 --Spacial table that will transferr all functions call to each and every sub table. Static tables version
 function createMultitable(...)
 
@@ -100,15 +99,15 @@ function createMultitable(...)
 	return setmetatable(out,manymeta) --create acctual manymeta table and return it
 	
 end
- 
- --Create Window that is inside other terminal object of selected size. If setTextScale is defined it attempts to finds largest possible size for terminal. Its auto centered and not needed part of screen is painter gray and frame is added. If sName is defined its added onto frame if possible.
+
+--Create Window that is inside other terminal object of selected size. If setTextScale is defined it attempts to finds largest possible size for terminal. Its auto centered and not needed part of screen is painter gray and frame is added. If sName is defined its added onto frame if possible.
 local tBor={"+","-","|"}--{"#","=","H"}
 local function createFramedWindow(sSide,nX,nY,sName)
 	
 	if (type( sSide ) ~= "table" and type( sSide ) ~= "string") or
-       type( nX ) ~= "number" or
-       type( nY ) ~= "number" or
-	   (sName ~= nil and type( sName ) ~= "string")then
+    	type( nX ) ~= "number" or
+    	type( nY ) ~= "number" or
+		(sName ~= nil and type( sName ) ~= "string")then
         error( "Expected string/object, number, number, [string]", 2 )
     end
 	

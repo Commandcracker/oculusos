@@ -9,7 +9,7 @@ end
 local sPath = shell.resolve( tArgs[1] )
 local bReadOnly = fs.isReadOnly( sPath )
 if fs.exists( sPath ) and fs.isDir( sPath ) then
-	print( "Cannot cat a directory." )
+	printError( "Cannot cat a directory." )
 	return
 end
 
@@ -25,6 +25,6 @@ if fs.exists( sPath ) then
     end
     file:close()
 else
-    print( "file not found" )
+    printError( "file not found" )
     return
 end

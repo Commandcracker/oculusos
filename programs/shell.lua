@@ -27,7 +27,7 @@ end
 -- Colours
 local promptColour, textColour, bgColour
 if term.isColour() then
-	promptColour = colours.yellow
+	promptColour = colours.orange
 	textColour = colours.white
 	bgColour = colours.black
 else

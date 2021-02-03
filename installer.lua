@@ -27,10 +27,30 @@ end
 
 local function question(question)
     if question == nil then else
-        term.write(question.."? [Y/n] ")
+        if term.isColor() then
+            term.setTextColour(colors.orange)
+        end
+        term.write(question.."? [")
+        if term.isColor() then
+            term.setTextColour(colors.lime)
+        end
+        term.write('Y')
+        if term.isColor() then
+            term.setTextColour(colors.orange)
+        end
+        term.write('/')
+        if term.isColor() then
+            term.setTextColour(colors.red)
+        end
+        term.write('n')
+        if term.isColor() then
+            term.setTextColour(colors.orange)
+        end
+        term.write("] ")
+        term.setTextColour(colors.white)
     end
     local input = string.lower(string.sub(read(),1,1))
-    if input == "y" or input == "j" or input == "" then
+    if input == 'y' or input == 'j' or input == '' then
         return true
     else 
         return false
@@ -65,12 +85,19 @@ if question(_question) then else
         term.setTextColour(colors.red)
     end
     print("Abort.")
+    term.setTextColour(colors.white)
     return
 end
 
 -- Download
 print()
+if term.isColor() then
+    term.setTextColour(colors.lime)
+end
 print("Downloading")
+if term.isColor() then
+    term.setTextColour(colors.blue)
+end
 print()
 
 local to_download = {}
@@ -175,6 +202,7 @@ if not tArgs[1] and settings and not pocket then
     settings.save()
 end
 
+term.setTextColour(colors.white)
 if question("Reboot now") then
     print()
     if term.isColor() then

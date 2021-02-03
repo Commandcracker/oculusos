@@ -14,7 +14,7 @@ print("Ping "..tArgs[1])
 for i=1,times do
   local time = os.time()
   if http.get(tArgs[1]) == nil then
-    print("Unknown host")
+    printError("Unknown host")
   else
     print("Got request in "..tostring((os.time()-time)*1000).." ms")
   end

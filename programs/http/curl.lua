@@ -21,7 +21,7 @@ local function get(url)
         local sResponse = response.readAll()
         print(sResponse)
     else
-        print( "Failed." )
+        printError( "Failed." )
     end
 end
 

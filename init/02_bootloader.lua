@@ -354,7 +354,7 @@ if not CraftOS then
 
 	shell.run("shell")
 	if term.isColour() then
-		term.setTextColour( colours.yellow )
+		term.setTextColour( colours.orange )
 	end
 	print( "Goodbye" )
     term.setTextColour( colours.white )

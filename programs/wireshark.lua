@@ -19,12 +19,26 @@ else
 end
 
 openModems(channel)
+term.clear()
+term.setCursorPos(1,1)
 
 while true do
     event, side, frequency, replyFrequency, message, distance = os.pullEvent("modem_message")
+    term.clear()
+    term.setCursorPos(1,1)
+    if term.isColor() then
+        term.setTextColour(colors.red)
+    end
     print("Side: "..side)
+    if term.isColor() then
+        term.setTextColour(colors.blue)
+    end
     print("Frequency: "..frequency)
     print("Reply frequency: "..replyFrequency)
     print("Distance: "..distance)
+    if term.isColor() then
+        term.setTextColour(colors.orange)
+    end
     print("Message: "..textutils.serialize(message))
+    textutils.tabulate() 
 end

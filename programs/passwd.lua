@@ -20,7 +20,7 @@ if fs.exists( password_path ) then
     term.write("Current Password: ")
     local passwd = read('*')
     if not sha256.sha256(passwd) == read_file(password_path) then
-        print("Incorrect password!")
+        printError("Incorrect password!")
         return
     end
 end
@@ -28,7 +28,7 @@ end
 term.write("New Password: ")
 local new_passwd = read('*')
 if string.len(new_passwd) < 4 then
-    print("Password must be 4 characters or more")
+    printError("Password must be 4 characters or more")
     return
 end
 
@@ -36,7 +36,7 @@ term.write("Repet Password: ")
 local repet_passwd = read('*')
 if new_passwd == repet_passwd then
     write_file(password_path, sha256.sha256(repet_passwd))
-    print("Password Changed")
+    printError("Password Changed")
 else
-    print("Password does not match")
+    printError("Password does not match")
 end
