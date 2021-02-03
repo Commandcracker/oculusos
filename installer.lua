@@ -206,7 +206,7 @@ term.setTextColour(colors.white)
 if question("Reboot now") then
     print()
     if term.isColor() then
-        term.setTextColor(colors.yellow)
+        term.setTextColor(colors.orange)
     end
     print("Rebooting computer")
     sleep(3)
