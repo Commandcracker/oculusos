@@ -35,7 +35,8 @@ local function encrypt_file(file, key)
             if encrypt then
                 out_file.writeLine(base64.encode(encrypt))
             else
-                print("faild")
+                printError("Incorrect password!")
+                return
             end
         end
 

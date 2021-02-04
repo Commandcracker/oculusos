@@ -18,8 +18,8 @@ else
 end
 
 while true do 
-    local event, key = os.pullEvent()
-    if event == "key" then
+    local event = os.pullEvent()
+    if event == "mouse_click" or event == "key" or event == "paste" or event == "char" then
         term.clear()
         term.setCursorPos(1,1)
         return

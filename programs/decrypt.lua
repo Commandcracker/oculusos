@@ -35,7 +35,8 @@ local function decrypt_file(file, key)
             if decrypt then
                 out_file.writeLine(decrypt)
             else
-                print("faild")
+                printError("Faild!")
+                return
             end
         end
 
