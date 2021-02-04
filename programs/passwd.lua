@@ -36,7 +36,10 @@ term.write("Repet Password: ")
 local repet_passwd = read('*')
 if new_passwd == repet_passwd then
     write_file(password_path, sha256.sha256(repet_passwd))
-    printError("Password Changed")
+    if term.isColor() then
+        term.setTextColour(colors.lime)
+    end
+    print("Password Changed")
 else
     printError("Password does not match")
 end
