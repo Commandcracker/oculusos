@@ -106,7 +106,7 @@ local to_download = {}
 
 if not fs.exists( ".shellrc" ) then
     table.insert(to_download,function()
-        download(url..".shellrc.lua", installation_path.."/.shellrc")
+        download(url..".shellrc.lua", "/.shellrc")
     end)
 end
 
