@@ -64,25 +64,16 @@ else
     while not bExit do
         term.redirect( parentTerm )
         term.setBackgroundColor( bgColour )
-        term.setTextColour( promptColour )
 
-        if term.isColor() then
-            term.setTextColour(colors.red)
-        end
         local sLabel = os.getComputerLabel()
         if not sLabel then
-            write("oculusos")
-        else
-            write(sLabel)
+            sLabel = "oculusos"
         end
-        term.setTextColour(colors.white)
-        write(":")
-        if term.isColor() then
-            term.setTextColour(colors.blue)
+
+        if PS1 then
+            local ps1 = PS1:gsub("\w", '/'..shell.dir())
+            cprint.cwrite(ps1:gsub("\h", sLabel))
         end
-        write("/" ..  shell.dir())
-        term.setTextColour(colors.white)
-        write("# ")
 
         term.setTextColour( textColour )
 

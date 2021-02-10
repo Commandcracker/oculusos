@@ -102,6 +102,14 @@ print()
 
 local to_download = {}
 
+-- .shellrc
+
+if not fs.exists( ".shellrc" ) then
+    table.insert(to_download,function()
+        download(url..".shellrc.lua", installation_path.."/.shellrc")
+    end)
+end
+
 -- Bootscreen
 local bootscreen = "bootscreen/"
 

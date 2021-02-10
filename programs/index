@@ -11,3 +11,5 @@ passwd
 encrypt
 decrypt
 wireshark
+reboot
+shutdown

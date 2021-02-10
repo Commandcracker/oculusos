@@ -352,6 +352,9 @@ if not CraftOS then
         print("No Password has been set. This is a security risk - please type 'passwd' to set a password.")
     end
 
+    if fs.exists( ".shellrc" ) then
+        pcall(shell.run(".shellrc"))
+    end
 	shell.run("shell")
 	if term.isColour() then
 		term.setTextColour( colours.orange )
