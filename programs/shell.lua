@@ -77,19 +77,36 @@ else
 
         term.setTextColour( textColour )
 
+        local sLine
+
 		if settings then
-			local sLine
 			if settings.get( "shell.autocomplete" ) then
 				sLine = read( nil, tCommandHistory, shell.complete )
 			else
 				sLine = read( nil, tCommandHistory )
 			end
-			table.insert( tCommandHistory, sLine )
-			shell.run( sLine )
 		else
-			local sLine = read( nil, tCommandHistory, shell.complete )
-			table.insert( tCommandHistory, sLine )
-			shell.run( sLine )
+			sLine = read( nil, tCommandHistory, shell.complete )
 		end
+
+        if string.find(sLine, "!!") then
+            if #tCommandHistory == 0 then
+                printError("No Command History!")
+            else
+                print(tCommandHistory[#tCommandHistory])
+                sLine = sLine:gsub("!!", tCommandHistory[#tCommandHistory])
+            end
+        end
+
+        if #tCommandHistory == 0 and  string.find(sLine, "!!") then else
+            
+            table.insert( tCommandHistory, sLine )
+
+            for _, command in ipairs(oculusos.split(sLine, ';')) do
+                shell.run( command )
+            end
+
+        end
+
     end
 end

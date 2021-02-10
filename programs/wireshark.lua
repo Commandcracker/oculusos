@@ -42,12 +42,6 @@ local function display(_side, _frequency, _replyFrequency, _message, _distance)
     print("Message: "..textutils.serialize(_message))
 end
 
-local function printCentred( yc, stg )
-	local xc = math.floor((TermW - string.len(stg)) / 2) + 1
-	term.setCursorPos(xc,yc)
-	term.write( stg )
-end
-
 local function menu(options, title) 
     local selected = 1
     local moved = false
@@ -63,7 +57,7 @@ local function menu(options, title)
         
         term.clear()
         
-        printCentred(2, title)
+        oculusos.printCentred(2, title)
         
         for i in ipairs(options) do
             term.setCursorPos(4,5 + i)
