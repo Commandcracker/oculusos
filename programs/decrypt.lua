@@ -25,8 +25,13 @@ local function decrypt_file(file, key)
     local out_file = fs.open( string.gsub(file, ".crypt", ''), "w" )
 
     while sLine do
+        -- Clearing cache to prevent out of space
         out_file.flush()
         in_file:flush()
+
+        -- Too long without yielding Fix
+        os.queueEvent("randomEvent")
+        os.pullEvent()
 
         if sLine == nil or sLine:match("%S") == nil then
             out_file.writeLine()
