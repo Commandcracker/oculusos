@@ -82,6 +82,7 @@ local function register_programs()
     shell.setPath( sPath )
     -- Setup aliases
     shell.setAlias("cls", "clear")
+    shell.setAlias("date", "time")
     -- Setup completion functions
     local function completion()
         local completion = require "cc.shell.completion"
