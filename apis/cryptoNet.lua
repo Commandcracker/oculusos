@@ -4060,15 +4060,15 @@ function host(serverName, discoverable, hideCertificate, modemSide, certificate,
     log("Checking "..keyPath.." for private key...")
     if fs.isDir(keyPath) then
       error(keyFilename.." already exists and is a directory, not a keyfile.", 2)
-    elseif fs.exists(keyFilename) then
-      local file = fs.open(keyFilename, "r")
+    elseif fs.exists(keyPath) then
+      local file = fs.open(keyPath, "r")
       privateKey = deserializeCertOrKey(file.readAll())
       file.close()
 
       if not privateKeyValid(privateKey) then
-        error(keyFilename.." already exists and is not a valid keyfile.", 2)
+        error(keyPath.." already exists and is not a valid keyfile.", 2)
       else
-        log("Loaded private key from "..keyFilename..".")
+        log("Loaded private key from "..keyPath..".")
       end
     else
       log("Private keyfile not found, will need to generate a new one.")
