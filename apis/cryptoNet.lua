@@ -2789,7 +2789,7 @@ local allServers = {}
 local allClientSockets = {}
 
 
-local function log(message)
+function log(message)
 	if loggingEnabled then
 		if term.isColor() then
 			term.write('[')
@@ -5201,55 +5201,4 @@ function signCertificate(certificate, privateKey)
     log("Saved certificate to "..certPath..".")
   end
   return certificate
-end
-
--- CryptoNet's command line interface, used by a certificate authority
--- to sign certificates.
--- Supports two commands: initCertAuth and signCert.
---
--- initCertAuth is used to generate the keys used to sign and verify certificates.
--- The public key should be distributed to all clients using the certificate
--- authority, while the private key should be kept secure on the cert auth's
--- machine.
---
--- Certificates to be signed should be copied to the cert auth machine,
--- e.g. using floppy disks. signCert is then used to sign the certificate,
--- which can then be transferred back to the server machine.
--- Only sign the certificates of trusted servers, and don't sign two certificates
--- with the same name and different public keys.
-
--- Only run if executed on the command line, not when imported with os.loadAPI().
-if shell ~= nil then
-  setLoggingEnabled(true)
-	-- Set the CryptoNet working directory to match the system one.
-  setWorkingDirectory(shell.dir())
-
-  local args = {...}
-  if args[1] == "signCert" then
-		-- Sign a certificate loaded from a file.
-    local certPath = args[2]
-    if certPath == nil then
-      log("Usage: cryptoNet signCert <file>")
-      return
-    end
-
-		-- Make paths relative to the working directory.
-    certPath = workingDir == "" and certPath or workingDir.."/"..certPath
-		-- Optional private key file argument, can be omitted to use default.
-    local keyPath = args[3]
-    local ok, msg = pcall(signCertificate, certPath, keyPath)
-
-    if not ok then
-      log("Error: "..msg:sub(8))
-    end
-  elseif args[1] == "initCertAuth" then
-		-- Generate the cert auth key pair and save them to the specified files.
-		-- The file arguments can be omitted to use the default values.
-    local ok, msg = pcall(initCertificateAuthority, args[2], args[3])
-    if not ok then
-      log("Error: "..msg:sub(8))
-    end
-  else
-    log("Invalid command.")
-  end
 end
