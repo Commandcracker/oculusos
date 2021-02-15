@@ -1,6 +1,5 @@
 -- Variables
 local url = "https://raw.githubusercontent.com/Commandcracker/oculusos/master/"
-local installation_path = "/oculusos"
 local tArgs = { ... }
 
 -- Functions
@@ -181,7 +180,7 @@ parallel.waitForAll(
         if not pocket then
             for item in get(url.."bin/not_pocket/index"):gmatch("([^\n]*)\n?") do
                 table.insert(to_download,function()
-                    download(url .. "bin/not_pocket/"..item..".lua", "/bin/not_pocket/"..item)
+                    download(url .. "bin/not_pocket/"..item..".lua", "/bin/"..item)
                 end)
             end
         end
