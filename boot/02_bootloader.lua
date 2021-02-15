@@ -55,7 +55,7 @@ end
 
 local function register_programs()
     -- Setup paths
-    local sPath = ".:/oculusos/programs:/rom/programs"
+    local sPath = ".:/bin:/rom/programs"
     if term.isColor() then
         sPath = sPath..":/rom/programs/advanced"
     end
@@ -72,12 +72,6 @@ local function register_programs()
     end
     if commands then
         sPath = sPath..":/rom/programs/command"
-    end
-    if http then
-        sPath = sPath..":/oculusos/programs/http:/rom/programs/http"
-    end
-    if not pocket then
-        sPath = sPath..":/oculusos/programs/not_pocket"
     end
     shell.setPath( sPath )
     -- Setup aliases
@@ -96,7 +90,7 @@ local function register_programs()
 
     pcall(completion)
 
-    local tPath = "/oculusos/apis/"
+    local tPath = "/lib"
     local tAll = fs.list(tPath)
 
     for item in pairs(tAll) do
@@ -129,7 +123,7 @@ end
 local function update()
     if http then
         local url = "https://raw.githubusercontent.com/Commandcracker/oculusos/master/"
-        if read_file("/oculusos/version") == get(url.."version") then else
+        if read_file("/.version") == get(url..".version") then else
             local url_full = url.."installer.lua"
             local tArgs = {
                 "Update"
@@ -349,14 +343,14 @@ if not CraftOS then
     register_programs()
     update()
 
-    if not fs.exists( "/oculusos/.passwd" ) then
+    if not fs.exists( "/.passwd" ) then
         print("No Password has been set. This is a security risk - please type 'passwd' to set a password.")
     end
 
-    if fs.exists( ".shellrc" ) then
-        pcall(shell.run(".shellrc"))
+    if fs.exists( "/.shellrc" ) then
+        pcall(shell.run("/.shellrc"))
     end
-	shell.run("shell")
+	shell.run("/bin/shell")
 	if term.isColour() then
 		term.setTextColour( colours.orange )
 	end

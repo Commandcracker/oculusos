@@ -15,3 +15,5 @@ reboot
 shutdown
 df
 cryptoNet
+curl
+ping

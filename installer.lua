@@ -130,7 +130,7 @@ else
 end
 
 table.insert(to_download,function()
-    download(url..bootscreen, installation_path.."/bootscreen")
+    download(url..bootscreen, "/.bootscreen")
 end)
 
 -- Startup
@@ -141,55 +141,47 @@ end)
 -- Programs - fix
 if not fs.exists("/rom/programs/http/wget") then
     table.insert(to_download,function()
-        download(url .. "fix/wget.lua", installation_path.."/programs/http/wget")
+        download(url .. "fix/wget.lua", "/bin/wget")
     end)
 end
 
 if tonumber(split(os.version(), ' ')[2]) <= 1.7 then
     table.insert(to_download,function()
-        download(url .. "fix/pastebin.lua", installation_path.."/programs/http/pastebin")
+        download(url .. "fix/pastebin.lua", "/bin/pastebin")
     end)
 end
 
 parallel.waitForAll(
     -- Startup
     function()
-        for item in get(url.."init/index"):gmatch("([^\n]*)\n?") do
+        for item in get(url.."boot/index"):gmatch("([^\n]*)\n?") do
             table.insert(to_download,function()
-                download(url .. "init/"..item..".lua", installation_path.."/init/"..item)
+                download(url .. "boot/"..item..".lua", "/boot/"..item)
             end)
         end
     end,
     -- APIS
     function()
-        for item in get(url.."apis/index"):gmatch("([^\n]*)\n?") do
+        for item in get(url.."lib/index"):gmatch("([^\n]*)\n?") do
             table.insert(to_download,function()
-                download(url .. "apis/"..item..".lua", installation_path.."/apis/"..item)
+                download(url .. "lib/"..item..".lua", "/lib/"..item)
             end)
         end
     end,
-    -- Programs
+    -- bin
     function()
-        for item in get(url.."programs/index"):gmatch("([^\n]*)\n?") do
+        for item in get(url.."bin/index"):gmatch("([^\n]*)\n?") do
             table.insert(to_download,function()
-                download(url .. "programs/"..item..".lua", installation_path.."/programs/"..item)
+                download(url .. "bin/"..item..".lua", "/bin/"..item)
             end)
         end
     end,
-    -- Programs - http
-    function()
-        for item in get(url.."programs/http/index"):gmatch("([^\n]*)\n?") do
-            table.insert(to_download,function()
-                download(url .. "programs/http/"..item..".lua", installation_path.."/programs/http/"..item)
-            end)
-        end
-    end,
-    -- Programs - not_pocket
+    -- bin - not_pocket
     function()
         if not pocket then
-            for item in get(url.."programs/not_pocket/index"):gmatch("([^\n]*)\n?") do
+            for item in get(url.."bin/not_pocket/index"):gmatch("([^\n]*)\n?") do
                 table.insert(to_download,function()
-                    download(url .. "programs/not_pocket/"..item..".lua", installation_path.."/programs/not_pocket/"..item)
+                    download(url .. "bin/not_pocket/"..item..".lua", "/bin/not_pocket/"..item)
                 end)
             end
         end
@@ -198,7 +190,7 @@ parallel.waitForAll(
 
 -- version
 table.insert(to_download,function()
-    download(url.."version", installation_path.."/version")
+    download(url..".version", "/.version")
 end)
 
 parallel.waitForAll(table.unpack(to_download))

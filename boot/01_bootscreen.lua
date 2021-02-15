@@ -14,7 +14,7 @@ end
 --Display
 term.setBackgroundColor(colors.black)
 term.clear()
-paintutils.drawImage(paintutils.loadImage("/oculusos/bootscreen"), 1, 1)
+paintutils.drawImage(paintutils.loadImage("/.bootscreen"), 1, 1)
 
 if turtle then
     draw(4,11, 19,11)
@@ -57,7 +57,7 @@ while true do
 end
 
 term.clear()
-paintutils.drawImage(paintutils.loadImage("/oculusos/bootscreen"), 1, 1)
+paintutils.drawImage(paintutils.loadImage("/.bootscreen"), 1, 1)
 sleep(1)
 term.setBackgroundColor(colors.black)
 term.clear()
