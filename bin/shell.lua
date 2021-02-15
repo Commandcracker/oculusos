@@ -51,7 +51,7 @@ else
     -- Print the header
     term.setBackgroundColor( bgColour )
     term.setTextColour( promptColour )
-    print( "OculusOS "..read_file("/oculusos/version"))
+    print( "OculusOS "..read_file("/.version"))
     term.setTextColour( textColour )
 
     -- Run the startup program
