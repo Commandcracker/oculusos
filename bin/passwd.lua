@@ -14,7 +14,7 @@ local function write_file(path, line)
     file:close()
 end
 
-local password_path = shell.resolve("/oculusos/.passwd")
+local password_path = shell.resolve("/.passwd")
 
 if fs.exists( password_path ) then
     term.write("Current Password: ")
