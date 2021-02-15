@@ -90,7 +90,7 @@ local function register_programs()
 
     pcall(completion)
 
-    local tPath = "/lib"
+    local tPath = "/lib/"
     local tAll = fs.list(tPath)
 
     for item in pairs(tAll) do
