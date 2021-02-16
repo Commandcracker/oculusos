@@ -122,25 +122,14 @@ end
 
 local function update()
     if http then
-        local url = "https://raw.githubusercontent.com/Commandcracker/oculusos/master/"
-        if read_file("/.version") == get(url..".version") then else
-            local url_full = url.."installer.lua"
-            local tArgs = {
-                "Update"
-            }
-            local res = get(url_full)
-            
-            if res then
-                local func, err = load(res, url_full, "t", _ENV)
-                if not func then
-                    printError( err )
-                    return
-                end
-                local success, msg = pcall(func, table.unpack(tArgs, 1))
-                if not success then
-                    printError( msg )
-                end
-            end
+        local system_info = json.decode(read_file("/.system_info"))
+        local latest = json.decode(get("https://api.github.com/repos/"..system_info.git.owner..'/'..system_info.git.repo.."/git/refs/heads/"..system_info.git.branch)).object.sha
+        local current = system_info.git.commit
+
+        if current == latest then else
+            term.write("Your OculusOS is outdated by ")
+            term.write(json.decode(get("https://api.github.com/repos/"..system_info.git.owner..'/'..system_info.git.repo.."/compare/"..latest.."..."..current)).behind_by)
+            print(" commits! Get the latest release bye typing 'do-release-upgrade'.")
         end
     end
 end
