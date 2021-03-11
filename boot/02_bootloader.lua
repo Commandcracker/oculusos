@@ -73,6 +73,9 @@ local function register_programs()
     if commands then
         sPath = sPath..":/rom/programs/command"
     end
+    if http then
+        sPath = sPath..":/rom/programs/http"
+    end
     shell.setPath( sPath )
     -- Setup aliases
     shell.setAlias("cls", "clear")
