@@ -7,3 +7,5 @@ bigfont
 cprint
 oculusos
 cryptoNet
+stack_trace
+argparse
