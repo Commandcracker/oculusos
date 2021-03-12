@@ -102,41 +102,6 @@ local function register_programs()
 
 end
 
-local function get(url)
-    local response = http.get(url)
-    
-    if response then
-        local sResponse = response.readAll()
-        response.close()
-        return sResponse
-    else
-        print( "Failed." )
-    end
-end
-
-local function read_file(path)
-    if fs.exists( path ) then
-        local file = io.open( path, "r" )
-        local sLine = file:read()
-        file:close()
-        return sLine
-    end
-end
-
-local function update()
-    if http then
-        local system_info = json.decode(read_file("/.system_info"))
-        local latest = json.decode(get("https://api.github.com/repos/"..system_info.git.owner..'/'..system_info.git.repo.."/git/refs/heads/"..system_info.git.branch)).object.sha
-        local current = system_info.git.commit
-
-        if current == latest then else
-            term.write("Your OculusOS is outdated by ")
-            term.write(json.decode(get("https://api.github.com/repos/"..system_info.git.owner..'/'..system_info.git.repo.."/compare/"..latest.."..."..current)).behind_by)
-            print(" commits! Get the latest release bye typing 'do-release-upgrade'.")
-        end
-    end
-end
-
 local function usage_small(y)
     printCentred(y, 'Use the keys "UP" and')
     printCentred(y+1, '"DOWN" to mark an entry,')
@@ -333,11 +298,6 @@ if not CraftOS then
 	term.clear()
 	term.setCursorPos(1,1)
     register_programs()
-    update()
-
-    if not fs.exists( "/.passwd" ) then
-        print("No Password has been set. This is a security risk - please type 'passwd' to set a password.")
-    end
 
     if fs.exists( "/.shellrc" ) then
         pcall(shell.run("/.shellrc"))

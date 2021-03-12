@@ -19,3 +19,5 @@ curl
 ping
 list
 do-release-upgrade
+clear
+lua

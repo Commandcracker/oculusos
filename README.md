@@ -18,7 +18,7 @@ installer
 ```
 # Third Party
 **Libraries**
-- [AES Lua](https://github.com/SquidDev-CC/aeslua) by [SquidDev-CC](https://github.com/SquidDev)
+- [AES Lua](https://github.com/SquidDev-CC/aeslua) by [SquidDev](https://github.com/SquidDev)
 - [Base64](https://pastebin.com/QYvNKrXE)
 - [Big Font](https://pastebin.com/3LfWxRWh) by [Wojbie](https://pastebin.com/u/Wojbie)
 - [cPrint](https://pastebin.com/2sxYu2Mq) by [Jesusthekiller](https://pastebin.com/u/jesusthekiller)
@@ -32,4 +32,4 @@ installer
 - [Matrix](https://pastebin.com/KQjmtASU) by [Felix Maxwell](https://pastebin.com/u/felixmaxwell)
 - [Mirror](http://pastebin.com/DW3LCC3L) by [Wojbie](https://pastebin.com/u/Wojbie)
 - Modified [Net Shell/NSH](https://pastebin.com/X5Fysdi4) by [lyqyd](https://github.com/lyqyd)
-- Parts from [mbs/Mildly better shell](https://github.com/SquidDev-CC/mbs) by [SquidDev](https://github.com/SquidDev)
+- Modified [mbs/Mildly better shell](https://github.com/SquidDev-CC/mbs) by [SquidDev](https://github.com/SquidDev)
