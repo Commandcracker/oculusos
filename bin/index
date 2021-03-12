@@ -21,3 +21,4 @@ list
 do-release-upgrade
 clear
 lua
+date
