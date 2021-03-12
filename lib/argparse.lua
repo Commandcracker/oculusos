@@ -180,7 +180,7 @@ function create(prefix)
     action = function()
       if prefix then print(prefix) print() end
 
-      print("USAGE")
+      print("Usage:")
       local max = 0
       for i = 1, #parser.list do max = math.max(max, #get_usage(parser.list[i])) end
       local format = " %-" .. max .. "s %s"

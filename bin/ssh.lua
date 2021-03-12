@@ -451,8 +451,8 @@ if #args >= 1 and args[1] == "host" then
 		return 
 	end
 	if term.current then
-		if args[4] then
-			rednet.host("tror", args[4])
+		if args[2] then
+			rednet.host("tror", args[2])
 		elseif os.getComputerLabel() then
 			rednet.host("tror", os.getComputerLabel())
 		else
