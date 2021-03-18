@@ -25,7 +25,7 @@ if fs.exists( "/.passwd" ) then
 		if sha256.sha256(input) == read_file("/.passwd") then
 			break
 		else
-			print("Incorrect password!")
+			printError("Incorrect password!")
 		end
 	end
 end

@@ -95,10 +95,14 @@ local function register_programs()
     local tPath = "/lib/"
     local tAll = fs.list(tPath)
 
+    print("Booting OculusOS...")
+    print("Initalizing lib...")
+
     for item in pairs(tAll) do
         os.loadAPI(tPath..tAll[item])
+        print("> "..tPath..tAll[item])
+        sleep(math.random())
     end
-
 end
 
 local function usage_small(y)
