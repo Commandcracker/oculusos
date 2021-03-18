@@ -147,17 +147,6 @@ function ArgParser:parse(...)
   return result
 end
 
-local function get_usage(options)
-  local name
-  if options.argument then name = options.mvar
-  elseif options.value then name = options.names[1] .. "=" .. options.mvar
-  else name = options.names[1]
-  end
-
-  if #options.names > 1 then name = name .. "," .. table.concat(options.names, ",", 2) end
-  return name
-end
-
 local arg_mt = { __name = "ArgParser", __index = ArgParser }
 
 --- Create a new argument parser.
@@ -174,20 +163,42 @@ function create(prefix)
     list = {},
   }, arg_mt)
 
-  parser:add({ "-h", "--help", "-?" }, {
+  parser:add({ "--help", "-?", "-h" }, {
     value = false, required = false,
     doc = "Show this help message",
     action = function()
       if prefix then print(prefix) print() end
 
-      print("Usage:")
-      local max = 0
-      for i = 1, #parser.list do max = math.max(max, #get_usage(parser.list[i])) end
-      local format = " %-" .. max .. "s %s"
+      if term.isColor() then
+        term.setTextColor(colors.orange)
+      else
+        term.setTextColor(colors.lightGray)
+      end
+      print("Options:")
 
       for i = 1, #parser.list do
         local arg = parser.list[i]
-        print(format:format(get_usage(arg), arg.doc or ""))
+
+          local name
+          if arg.argument then name = arg.mvar
+          elseif arg.value then name = arg.names[1] .. "=" .. arg.mvar
+          else name = arg.names[1]
+          end
+
+          term.setTextColor(colors.white)
+          term.write(" "..name.." ")
+
+          if #arg.names > 1 then
+            if term.isColor() then
+              term.setTextColor(colors.brown)
+            else
+              term.setTextColor(colors.gray)
+            end
+            term.write("("..table.concat(arg.names, ",", 2)..") ")
+          end
+        
+        term.setTextColor(colors.lightGray)
+        print(arg.doc or "")
       end
 
       error("", 0)

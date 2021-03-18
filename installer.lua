@@ -358,7 +358,7 @@ table.insert(to_download,function()
 end)
 
 -- Programs - fix
-if not fs.exists("/rom/programs/http/wget") then
+if shell.resolveProgram("/rom/programs/http/wget") == nil then
     table.insert(to_download,function()
         download(url .. "fix/wget.lua", "/bin/wget")
     end)
