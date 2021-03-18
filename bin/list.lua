@@ -12,7 +12,12 @@ local tAll = fs.list( sDir )
 local tFiles = {}
 local tDirs = {}
 
-local bShowHidden = settings.get( "list.show_hidden" )
+local bShowHidden = false
+
+if settings then
+	bShowHidden = settings.get( "list.show_hidden" )
+end
+
 for n, sItem in pairs( tAll ) do
 	if bShowHidden or string.sub( sItem, 1, 1 ) ~= "." then
 		local sPath = fs.combine( sDir, sItem )

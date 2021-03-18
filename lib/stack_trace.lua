@@ -103,8 +103,7 @@ function os.run(env, path, ...)
 
     local ok, err
     if 1 then -- settings.get("mbs.shell.traceback")
-        local arg = table.pack(...)
-        ok, err = stack_trace.xpcall_with(function() return func(table.unpack(arg, 1, arg.n)) end)
+        ok, err = xpcall_with(function() return func(...) end)
     else
         ok, err = pcall(func, ...)
     end

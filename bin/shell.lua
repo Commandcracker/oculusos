@@ -574,7 +574,7 @@ while coroutine.status(worker) ~= "dead" do
 
     -- Run the main REPL worker
     if filter == nil or e == filter or e == "terminate" then
-        ok, filter = coroutine.resume(worker, table.unpack(event, 1, event.n))
+        ok, filter = coroutine.resume(worker, table.unpack(event, 1))
     end
 
     -- Resize the terminal if required
