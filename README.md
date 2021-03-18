@@ -1,5 +1,5 @@
 # OculusOS
-OculusOS is a lua os for the minecraft mod ComputerCraft and ComputerCraft Tweaked
+OculusOS is a Linux like OS's for the minecraft mod ComputerCraft and ComputerCraft Tweaked
 # Installation
 **ComputerCraft 1.78+ and ComputerCraft Tweaked**
 ```
