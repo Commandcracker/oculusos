@@ -7,13 +7,13 @@ pastebin run cCENE9mc
 ```
 **ComputerCraft 1.77**
 ```
-wget https://raw.githubusercontent.com/Commandcracker/oculusos/master/installer.lua installer
+wget https://raw.githubusercontent.com/Commandcracker/oculusos/master/build/installer.lua installer
 installer
 ```
 **ComputerCraft 1.76-**
 ```lua
 lua
-local a=http.get("https://raw.githubusercontent.com/Commandcracker/oculusos/master/installer.lua")local b=fs.open(shell.resolve("installer"),"w")b.write(a.readAll())b.close()a.close()exit()
+local a=http.get("https://raw.githubusercontent.com/Commandcracker/oculusos/master/build/installer.lua")local b=fs.open(shell.resolve("installer"),"w")b.write(a.readAll())b.close()a.close()exit()
 installer
 ```
 # Third Party
