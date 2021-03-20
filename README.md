@@ -13,7 +13,7 @@ installer
 **ComputerCraft 1.76-**
 ```lua
 lua
-local r = http.get("https://raw.githubusercontent.com/Commandcracker/oculusos/master/installer.lua"); local f = fs.open( shell.resolve( "installer" ), "w" ); f.write( r.readAll() ); f.close(); r.close(); exit()
+local a=http.get("https://raw.githubusercontent.com/Commandcracker/oculusos/master/installer.lua")local b=fs.open(shell.resolve("installer"),"w")b.write(a.readAll())b.close()a.close()exit()
 installer
 ```
 # Third Party
