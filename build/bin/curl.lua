@@ -1,0 +1,1 @@
+if not http then printError("curl requires the http API")printError("Set http_enable to true in ComputerCraft.cfg")return end;local function a()print("Usage:")print("curl <url>")end;local b={...}if#b<1 then a()return end;local function c(d)local e=http.get(d)if e then local f=e.readAll()print(f)else printError("Failed.")end end;c(b[1])

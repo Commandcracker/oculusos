@@ -264,7 +264,7 @@ local function question(question)
     end
 end
 
-function split(string, delimiter)
+local function split(string, delimiter)
     local result = { }
     local from = 1
     local delim_from, delim_to = string.find( string, delimiter, from )
@@ -286,6 +286,8 @@ local git = {
 }
 
 local url = "https://raw.githubusercontent.com/"..git.owner..'/'..git.repo..'/'..git.branch..'/'
+local url_build = url.."build/"
+local url_src = url.."src/"
 
 local tArgs = { ... }
 
@@ -354,53 +356,53 @@ end)
 
 -- Startup
 table.insert(to_download,function()
-    download(url.."startup.lua", "/startup")
+    download(url_build.."startup.lua", "/startup")
 end)
 
 -- Programs - fix
 if shell.resolveProgram("/rom/programs/http/wget") == nil then
     table.insert(to_download,function()
-        download(url .. "fix/wget.lua", "/bin/wget")
+        download(url_build .. "fix/wget.lua", "/bin/wget")
     end)
 end
 
 if tonumber(split(os.version(), ' ')[2]) <= 1.7 then
     table.insert(to_download,function()
-        download(url .. "fix/pastebin.lua", "/bin/pastebin")
+        download(url_build .. "fix/pastebin.lua", "/bin/pastebin")
     end)
 end
 
 parallel.waitForAll(
     -- Startup
     function()
-        for item in get(url.."boot/index"):gmatch("([^\n]*)\n?") do
+        for item in get(url_src.."boot/index"):gmatch("([^\n]*)\n?") do
             table.insert(to_download,function()
-                download(url .. "boot/"..item..".lua", "/boot/"..item)
+                download(url_build .. "boot/"..item..".lua", "/boot/"..item)
             end)
         end
     end,
     -- APIS
     function()
-        for item in get(url.."lib/index"):gmatch("([^\n]*)\n?") do
+        for item in get(url_src.."lib/index"):gmatch("([^\n]*)\n?") do
             table.insert(to_download,function()
-                download(url .. "lib/"..item..".lua", "/lib/"..item)
+                download(url_build .. "lib/"..item..".lua", "/lib/"..item)
             end)
         end
     end,
     -- bin
     function()
-        for item in get(url.."bin/index"):gmatch("([^\n]*)\n?") do
+        for item in get(url_src.."bin/index"):gmatch("([^\n]*)\n?") do
             table.insert(to_download,function()
-                download(url .. "bin/"..item..".lua", "/bin/"..item)
+                download(url_build .. "bin/"..item..".lua", "/bin/"..item)
             end)
         end
     end,
     -- bin - not_pocket
     function()
         if not pocket then
-            for item in get(url.."bin/not_pocket/index"):gmatch("([^\n]*)\n?") do
+            for item in get(url_src.."bin/not_pocket/index"):gmatch("([^\n]*)\n?") do
                 table.insert(to_download,function()
-                    download(url .. "bin/not_pocket/"..item..".lua", "/bin/"..item)
+                    download(url_build .. "bin/not_pocket/"..item..".lua", "/bin/"..item)
                 end)
             end
         end

@@ -33,3 +33,14 @@ installer
 - [Mirror](http://pastebin.com/DW3LCC3L) by [Wojbie](https://pastebin.com/u/Wojbie)
 - Modified [Net Shell/NSH](https://pastebin.com/X5Fysdi4) by [lyqyd](https://github.com/lyqyd)
 - Modified [mbs/Mildly better shell](https://github.com/SquidDev-CC/mbs) by [SquidDev](https://github.com/SquidDev)
+# Building
+## Requirements
+You need to have [Node.js](https://nodejs.org) Installed. \
+Then run this command to install [luamin](https://github.com/mathiasbynens/luamin).
+```bash
+npm install luamin
+```
+## Running the build process
+```bash
+node build
+```

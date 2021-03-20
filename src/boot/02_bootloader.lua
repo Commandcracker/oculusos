@@ -1,5 +1,5 @@
 -- Global Variables
-oldOsPullEvent = os.pullEvent
+local oldOsPullEvent = os.pullEvent
 os.pullEvent = os.pullEventRaw
 
 -- Variables

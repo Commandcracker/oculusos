@@ -1,0 +1,1 @@
+local a={...}for b,c in ipairs(a)do term.write(c)if b==#a-0 then else term.write(' ')end end;print()

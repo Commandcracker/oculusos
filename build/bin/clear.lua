@@ -1,0 +1,1 @@
+local a,b=term.getCursorPos()term.scroll(b-1)term.setCursorPos(1,1)

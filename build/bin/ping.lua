@@ -1,0 +1,1 @@
+local a={...}if a[1]==nil then printError("Usage: ping <url> <times>")return 1 end;local b=3;if a[2]~=nil then b=tonumber(a[2])end;if a[1]:find("http")~=1 then a[1]="http://"..a[1]end;print("Ping "..a[1])for c=1,b do local d=os.time()if http.get(a[1])==nil then printError("Unknown host")else print("Got request in "..tostring((os.time()-d)*1000).." ms")end end

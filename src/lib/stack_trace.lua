@@ -95,7 +95,7 @@ function os.run(env, path, ...)
     --expect(2, path, "string")
   
     setmetatable(env, { __index = _G })
-    local func, err = loadfile(path, nil, env)
+    local func, err = loadfile(path, env)
     if not func then 
         printError(err)
         return false
@@ -103,7 +103,8 @@ function os.run(env, path, ...)
 
     local ok, err
     if 1 then -- settings.get("mbs.shell.traceback")
-        ok, err = xpcall_with(function() return func(...) end)
+        local arg = table.pack(...)
+        ok, err = xpcall_with(function() return func(table.unpack(arg, 1, arg.n)) end)
     else
         ok, err = pcall(func, ...)
     end

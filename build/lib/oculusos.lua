@@ -1,0 +1,1 @@
+local a,b=term.getSize()function split(string,c)local d={}local e=1;local f,g=string.find(string,c,e)while f do table.insert(d,string.sub(string,e,f-1))e=g+1;f,g=string.find(string,c,e)end;table.insert(d,string.sub(string,e))return d end;function printCentred(h,i)local j=math.floor((a-string.len(i))/2)+1;term.setCursorPos(j,h)term.write(i)end
