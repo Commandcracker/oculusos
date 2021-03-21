@@ -1,6 +1,6 @@
 --[[
 
-	\d   the date in “Weekday Month Date” format (e.g., “Tue May 26”)
+	\d   the date in "Weekday Month Date" format (e.g., "Tue May 26")
 	\h   The hostname.
 	\t   the current time in 24-hour HH:MM:SS format
 	\T   the current time in 12-hour HH:MM:SS format
