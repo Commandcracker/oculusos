@@ -30,7 +30,7 @@ if http then
     else
         print("new OculusOS release Found")
 
-        local url_full = "https://raw.githubusercontent.com/"..system_info.git.owner..'/'..system_info.git.repo..'/'..system_info.git.branch.."/installer.lua"
+        local url_full = "https://raw.githubusercontent.com/"..system_info.git.owner..'/'..system_info.git.repo..'/'..system_info.git.branch.."/build/installer.lua"
         local tArgs = {
             "Update"
         }
