@@ -497,6 +497,11 @@ local worker =
 
             if PS1 then
                 local ps1 = PS1:gsub("\w", '/'..shell.dir())
+                ps1 = ps1:gsub("\t", os.date("%H:%M:%S"))
+                ps1 = ps1:gsub("\T", os.date("%I:%M:%S"))
+                ps1 = ps1:gsub("\d", os.date("%a %b %y"))
+                ps1 = ps1:gsub("\@", os.date("%I:%M %p"))
+                ps1 = ps1:gsub("\A", os.date("%H:%M"))
                 cprint.cwrite(ps1:gsub("\h", sLabel))
             else
                 write(shell.dir() .. "> ")
