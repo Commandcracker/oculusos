@@ -1,23 +1,34 @@
 # OculusOS
+
 OculusOS is a Linux like OS's for the minecraft mod ComputerCraft and ComputerCraft Tweaked
-# Installation
-**ComputerCraft 1.78+ and ComputerCraft Tweaked**
-```
+
+## Installation
+
+### ComputerCraft 1.78+ and ComputerCraft Tweaked
+
+```bash
 pastebin run cCENE9mc
 ```
-**ComputerCraft 1.77**
-```
+
+### ComputerCraft 1.77
+
+```bash
 wget https://raw.githubusercontent.com/Commandcracker/oculusos/master/build/installer.lua installer
 installer
 ```
-**ComputerCraft 1.76-**
+
+### ComputerCraft 1.76-
+
 ```lua
 lua
 local a=http.get("https://raw.githubusercontent.com/Commandcracker/oculusos/master/build/installer.lua")local b=fs.open(shell.resolve("installer"),"w")b.write(a.readAll())b.close()a.close()exit()
 installer
 ```
-# Third Party
-**Libraries**
+
+## Third Party
+
+### Libraries
+
 - [AES Lua](https://github.com/SquidDev-CC/aeslua) by [SquidDev](https://github.com/SquidDev)
 - [Base64](https://pastebin.com/QYvNKrXE)
 - [Big Font](https://pastebin.com/3LfWxRWh) by [Wojbie](https://pastebin.com/u/Wojbie)
@@ -28,19 +39,26 @@ installer
 - [SHA-256](https://pastebin.com/gsFrNjbt) by [GravityScore](https://pastebin.com/u/GravityScore)
 - Parts from [metis](https://github.com/SquidDev-CC/metis) by [SquidDev](https://github.com/SquidDev)
 
-**Programms**
+### Programms
+
 - [Matrix](https://pastebin.com/KQjmtASU) by [Felix Maxwell](https://pastebin.com/u/felixmaxwell)
 - [Mirror](http://pastebin.com/DW3LCC3L) by [Wojbie](https://pastebin.com/u/Wojbie)
 - Modified [Net Shell/NSH](https://pastebin.com/X5Fysdi4) by [lyqyd](https://github.com/lyqyd)
 - Modified [mbs/Mildly better shell](https://github.com/SquidDev-CC/mbs) by [SquidDev](https://github.com/SquidDev)
-# Building
-## Requirements
+
+## Building
+
+### Requirements
+
 You need to have [Node.js](https://nodejs.org) Installed. \
 Then run this command to install [luamin](https://github.com/mathiasbynens/luamin).
+
 ```bash
 npm install luamin
 ```
-## Running the build process
+
+### Running the build process
+
 ```bash
 node build
 ```
