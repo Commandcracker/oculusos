@@ -1,12 +1,12 @@
 --[[
 
-	\d   the date in "Weekday Month Date" format (e.g., "Tue May 26")
-	\h   The hostname.
-	\t   the current time in 24-hour HH:MM:SS format
-	\T   the current time in 12-hour HH:MM:SS format
-	\@   the current time in 12-hour am/pm format
-	\A   the current time in 24-hour HH:MM format
-	\w   The current working directory.
+	\\d   the date in "Weekday Month Date" format (e.g., "Tue May 26")
+	\\h   The hostname.
+	\\t   the current time in 24-hour HH:MM:SS format
+	\\T   the current time in 12-hour HH:MM:SS format
+	\\@   the current time in 12-hour am/pm format
+	\\A   the current time in 24-hour HH:MM format
+	\\w   The current working directory.
 
 	\n   A newline.
 
@@ -32,4 +32,4 @@
 		f black
 ]]
 
-_G.PS1="&b(&e\h&b)-[&0\w&b]\n&e# "
+_G.PS1="&b(&e\\h&b)-[&0\\w&b]\n&e# "
