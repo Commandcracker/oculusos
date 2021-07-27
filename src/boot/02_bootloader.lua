@@ -101,8 +101,9 @@ local function register_programs()
     for item in pairs(tAll) do
         os.loadAPI(tPath..tAll[item])
         print("> "..tPath..tAll[item])
-        sleep(math.random())
+        --sleep(math.random())
     end
+    sleep(1)
 end
 
 local function usage_small(y)
