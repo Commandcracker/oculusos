@@ -3,17 +3,32 @@ const luaparse = require("luaparse");
 const fs = require("fs");
 const path = require("path");
 
+const license_map = {
+    // lib
+    //"lib/aes.lua": "aeslua.txt",
+    "lib/bigfont.lua": "bigfont.txt",
+    "lib/cprint.lua": "cprint.txt",
+    "lib/cryptoNet.lua": "cryptonet.txt",
+    "lib/framebuffer.lua": "framebuffer.txt",
+    // bin
+    //"lib/readline.lua": "metis.txt",
+    //"lib/stack_trace.lua": "metis.txt",
+    //"lib/scroll_window.lua": "metis.txt",
+    //"lib/argparse.lua": "metis.txt",
+    //"bin/shell.lua": "mbs.txt",
+    "bin/matrix.lua": "matrix.txt",
+    "bin/not_pocket/mirror.lua": "mirror.txt"
+}
+
 function minify(input_file, output_file, options) {
     fs.readFile(input_file, "utf8", (err, data) => {
         if (err) throw err;
 
         const parsed_data = luaparse.parse(data, options);
         var minifyed_data = luamin.minify(parsed_data);
-
-        const license_path = path.join("Licenses", path.basename(input_file).split(".").slice(0, -1).join(".") + ".txt");
-
-        if (fs.existsSync(license_path)) {
-            data = fs.readFileSync(license_path, "utf8")
+        
+        if (license_map[input_file.slice(4)] != null) {
+            data = fs.readFileSync(path.join("Licenses", license_map[input_file.slice(4)]), "utf8")
             minifyed_data = "--[[\n" + data + "\n]]\n" + minifyed_data;
         }
 

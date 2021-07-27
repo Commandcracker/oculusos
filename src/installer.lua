@@ -376,34 +376,42 @@ parallel.waitForAll(
     -- Startup
     function()
         for item in get(url_src.."boot/index"):gmatch("([^\n]*)\n?") do
-            table.insert(to_download,function()
-                download(url_build .. "boot/"..item..".lua", "/boot/"..item)
-            end)
+			if item ~= "" then
+				table.insert(to_download,function()
+					download(url_build .. "boot/"..item..".lua", "/boot/"..item)
+				end)
+			end
         end
     end,
     -- APIS
     function()
         for item in get(url_src.."lib/index"):gmatch("([^\n]*)\n?") do
-            table.insert(to_download,function()
-                download(url_build .. "lib/"..item..".lua", "/lib/"..item)
-            end)
+			if item ~= "" then
+				table.insert(to_download,function()
+					download(url_build .. "lib/"..item..".lua", "/lib/"..item)
+				end)
+			end
         end
     end,
     -- bin
     function()
         for item in get(url_src.."bin/index"):gmatch("([^\n]*)\n?") do
-            table.insert(to_download,function()
-                download(url_build .. "bin/"..item..".lua", "/bin/"..item)
-            end)
+			if item ~= "" then
+				table.insert(to_download,function()
+					download(url_build .. "bin/"..item..".lua", "/bin/"..item)
+				end)
+			end
         end
     end,
     -- bin - not_pocket
     function()
         if not pocket then
             for item in get(url_src.."bin/not_pocket/index"):gmatch("([^\n]*)\n?") do
-                table.insert(to_download,function()
-                    download(url_build .. "bin/not_pocket/"..item..".lua", "/bin/"..item)
-                end)
+				if item ~= "" then
+					table.insert(to_download,function()
+						download(url_build .. "bin/not_pocket/"..item..".lua", "/bin/"..item)
+					end)
+				end
             end
         end
     end
