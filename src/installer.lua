@@ -15,7 +15,7 @@ local function isArray(t)
 end
 
 local whites = {['\n']=true; ['\r']=true; ['\t']=true; [' ']=true; [',']=true; [':']=true}
-function removeWhite(str)
+local function removeWhite(str)
 	while whites[str:sub(1, 1)] do
 		str = str:sub(2)
 	end
@@ -82,11 +82,11 @@ local function encodeCommon(val, pretty, tabLevel, tTracking)
 	return str
 end
 
-function encode(val)
+local function encode(val)
 	return encodeCommon(val, false, 0, {})
 end
 
-function encodePretty(val)
+local function encodePretty(val)
 	return encodeCommon(val, true, 0, {})
 end
 
@@ -97,7 +97,7 @@ for k,v in pairs(controls) do
 	decodeControls[v] = k
 end
 
-function parseBoolean(str)
+local function parseBoolean(str)
 	if str:sub(1, 4) == "true" then
 		return true, removeWhite(str:sub(5))
 	else
@@ -105,12 +105,12 @@ function parseBoolean(str)
 	end
 end
 
-function parseNull(str)
+local function parseNull(str)
 	return nil, removeWhite(str:sub(5))
 end
 
 local numChars = {['e']=true; ['E']=true; ['+']=true; ['-']=true; ['.']=true}
-function parseNumber(str)
+local function parseNumber(str)
 	local i = 1
 	while numChars[str:sub(i, i)] or tonumber(str:sub(i, i)) do
 		i = i + 1
@@ -120,7 +120,7 @@ function parseNumber(str)
 	return val, str
 end
 
-function parseString(str)
+local function parseString(str)
 	str = str:sub(2)
 	local s = ""
 	while str:sub(1,1) ~= "\"" do
@@ -140,7 +140,7 @@ function parseString(str)
 	return s, removeWhite(str:sub(2))
 end
 
-function parseArray(str)
+local function parseArray(str)
 	str = removeWhite(str:sub(2))
 
 	local val = {}
@@ -156,7 +156,7 @@ function parseArray(str)
 	return val, str
 end
 
-function parseObject(str)
+local function parseObject(str)
 	str = removeWhite(str:sub(2))
 
 	local val = {}
@@ -170,7 +170,7 @@ function parseObject(str)
 	return val, str
 end
 
-function parseMember(str)
+local function parseMember(str)
 	local k = nil
 	k, str = parseValue(str)
 	local val = nil
@@ -178,7 +178,7 @@ function parseMember(str)
 	return k, val, str
 end
 
-function parseValue(str)
+local function parseValue(str)
 	local fchar = str:sub(1, 1)
 	if fchar == "{" then
 		return parseObject(str)
@@ -196,13 +196,13 @@ function parseValue(str)
 	return nil
 end
 
-function decode(str)
+local function decode(str)
 	str = removeWhite(str)
 	t = parseValue(str)
 	return t
 end
 
-function decodeFromFile(path)
+local function decodeFromFile(path)
 	local file = assert(fs.open(path, "r"))
 	local decoded = decode(file.readAll())
 	file.close()
@@ -385,6 +385,9 @@ end
 if tonumber(split(os.version(), ' ')[2]) <= 1.7 then
     table.insert(to_download,function()
         download(url_build .. "fix/pastebin.lua", "/bin/pastebin")
+    end)
+	table.insert(to_download,function()
+        download(url_build .. "fix/00_fix.lua", "/bin/00_fix")
     end)
 end
 

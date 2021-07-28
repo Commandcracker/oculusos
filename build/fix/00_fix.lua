@@ -1,0 +1,1 @@
+function table.pack(...)local a={...}a.n=select('#',...)return setmetatable(a,table)end

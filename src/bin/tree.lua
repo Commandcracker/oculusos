@@ -1,7 +1,7 @@
 local currentPath = shell.resolve(".")
 local tArgs = { ... }
 
-function listDir( path, prefix )
+local function listDir( path, prefix )
     if path == "" then path = "\\" end
     
     for k, v in pairs( fs.list( path ) ) do

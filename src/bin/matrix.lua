@@ -9,7 +9,7 @@ local sourceWeight = 0 --Affects the chance that no sources will be generated
 local greenWeight = 8 --Threshhold out of 10 that determines when characters will switch from lime to green
 local grayWeight = 2 --Same as about, but from green to gray
 
-function getMonitors()
+local function getMonitors()
 	local monitors = {}
 	if checkMonitorSide( "top" ) then table.insert( monitors, "top" ) end
 	if checkMonitorSide( "bottom" ) then table.insert( monitors, "bottom" ) end
@@ -19,7 +19,7 @@ function getMonitors()
 	if checkMonitorSide( "back" ) then table.insert( monitors, "back" ) end
 	return monitors
 end
-function checkMonitorSide( side )
+local function checkMonitorSide( side )
 	if peripheral.isPresent( side ) then
 		if peripheral.getType(side) == "monitor" then
 			return true
@@ -27,7 +27,7 @@ function checkMonitorSide( side )
 	end
 	return false
 end
-function printMonitorStats( side )
+local function printMonitorStats( side )
 	local x, y = peripheral.call(side, "getSize")
 	local color = "No"
 	if peripheral.call(side, "isColor") then
@@ -35,7 +35,7 @@ function printMonitorStats( side )
 	end
 	print("Side:"..side.." Size:("..x..", "..y..") Color?"..color)
 end
-function askMonitor()
+local function askMonitor()
 	local monitors = getMonitors()
 	if #monitors == 0 then
 		print("No monitors found, add more!")
@@ -61,11 +61,11 @@ function askMonitor()
 	end
 end
 
-function printCharAt( monitor, x, y, char )
+local function printCharAt( monitor, x, y, char )
 	monitor.setCursorPos( x, y )
 	monitor.write( char )
 end
-function printGrid( monitor, grid, color )
+local function printGrid( monitor, grid, color )
 	for i=1,#grid do
 		for o=1,#grid[i] do
 			if color then monitor.setTextColor( grid[i][o]["color"] ) end
@@ -74,7 +74,7 @@ function printGrid( monitor, grid, color )
 	end
 end
 
-function colorLifetime( life, originalLifetime )
+local function colorLifetime( life, originalLifetime )
 	local lifetimePart = originalLifetime/10
 	if life < grayWeight*lifetimePart then
 		return colors.gray
@@ -84,11 +84,11 @@ function colorLifetime( life, originalLifetime )
 		return colors.lime
 	end
 end
-function getRandomChar()
+local function getRandomChar()
 	local randTable = {"1","2","3","4","5","6","7","8","9","0","!","@","#","$","%","^","&","*","(",")","_","-","+","=","~","`",",","<",">",".","/","?",":","{","}","[","]","\\","\"","\'"}
 	return randTable[math.random(1, #randTable)]
 end
-function tick( screen )
+local function tick( screen )
 
 	--update lifetimes
 	for x=1,#screen do
@@ -139,7 +139,7 @@ function tick( screen )
 	return screen
 end
 
-function setup( w, h )
+local function setup( w, h )
 	local retTab = {}
 	for x=1,w do
 		retTab[x] = {}
@@ -154,7 +154,7 @@ function setup( w, h )
 	end
 	return retTab
 end
-function run()
+local function run()
 	local color = term.isColor()
 	local w, h = term.getSize()
 	local screen = setup( w, h )

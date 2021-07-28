@@ -9,12 +9,16 @@ local function copy_term(from, to, get_line, cursor_offset)
   local _, sizeY = from.getSize()
   for y = 1, sizeY do
     to.setCursorPos(1, y)
-    to.blit(get_line(y))
+    if get_line then
+      to.blit(get_line(y))
+    end
   end
 
   local x, y = from.getCursorPos()
   to.setCursorPos(x, y - cursor_offset)
-  to.setCursorBlink(from.getCursorBlink())
+  if from.getCursorBlink then
+    to.setCursorBlink(from.getCursorBlink())
+  end
   to.setTextColour(from.getTextColour())
   to.setBackgroundColour(from.getBackgroundColour())
 
@@ -368,7 +372,8 @@ function create(original)
         if cursor_threshold > 0 then
           redirect.scroll(cursor_threshold)
         end
-
+        
+        print(old_delegate.getLine)
         copy_term(old_delegate, redirect, old_delegate.getLine, 0)
       end
     end

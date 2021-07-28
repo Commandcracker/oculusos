@@ -8,7 +8,7 @@ local function size(nSpace)
 	end
 end
 
-data = {
+local data = {
 	{"Filesystem", "FreeSpace"}
 }
 
@@ -27,15 +27,15 @@ for _, side in ipairs(peripheral.getNames()) do
 	end
 end
 
-Filesystem_space = 0
+local spacing = 0
 for k, v in pairs(data) do
-	if v[1]:len() > Filesystem_space then
-		Filesystem_space = v[1]:len()
+	if v[1]:len() > spacing then
+		spacing = v[1]:len()
 	end
 end
 
 for k, v in pairs(data) do
-	for i = Filesystem_space - v[1]:len(), 0, -1 do
+	for i = spacing - v[1]:len(), 0, -1 do
 		v[1] = v[1].." "
 	end
 end

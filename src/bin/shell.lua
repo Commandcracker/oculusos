@@ -448,6 +448,8 @@ if fs.exists( "/.shellrc" ) then
     pcall(shell.run("/.shellrc"))
 end
 
+local running_command = false
+
 local worker =
     coroutine.create(
     function()
@@ -518,11 +520,13 @@ local worker =
 
             if PS1 then
                 local ps1 = PS1:gsub("\\w", '/'..shell.dir())
-                ps1 = ps1:gsub("\\t", os.date("%H:%M:%S"))
-                ps1 = ps1:gsub("\\T", os.date("%I:%M:%S"))
-                ps1 = ps1:gsub("\\d", os.date("%a %b %y"))
-                ps1 = ps1:gsub("\\@", os.date("%I:%M %p"))
-                ps1 = ps1:gsub("\\A", os.date("%H:%M"))
+                if os.date then
+                    ps1 = ps1:gsub("\\t", os.date("%H:%M:%S"))
+                    ps1 = ps1:gsub("\\T", os.date("%I:%M:%S"))
+                    ps1 = ps1:gsub("\\d", os.date("%a %b %y"))
+                    ps1 = ps1:gsub("\\@", os.date("%I:%M %p"))
+                    ps1 = ps1:gsub("\\A", os.date("%H:%M"))
+                end
                 cprint.cwrite(ps1:gsub("\\h", sLabel))
             else
                 write(shell.dir() .. "> ")
@@ -583,7 +587,9 @@ local worker =
                 end
 
                 for _, command in ipairs(oculusos.split(line, ";")) do
+                    running_command = true
                     ok = shell.run(command)
+                    running_command = false
                 end
             end
             
@@ -621,7 +627,7 @@ if supports_scroll then
         end
 
         -- If we're in some interactive function, allow scrolling the input
-        if redirect.getCursorBlink() then
+        if not running_command then
             local change = 0
             if e == "mouse_scroll" then
                 change = event[2]
