@@ -468,6 +468,6 @@ if question("Reboot now") then
         term.setTextColor(colors.orange)
     end
     print("Rebooting computer")
-    sleep(3)
+    sleep(1)
     os.reboot()
 end
