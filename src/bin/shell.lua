@@ -436,7 +436,7 @@ local function update()
                 if data == nil then
                     term.write("?")
                 else
-                    term.write(tostring(json.decode(data).behind_by))
+                    term.write(json.decode(data).behind_by)
                 end
                 print(" commits! Get the latest release bye typing 'do-release-upgrade'.")
             end
