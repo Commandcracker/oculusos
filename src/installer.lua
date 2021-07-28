@@ -170,7 +170,7 @@ local function parseObject(str)
 	return val, str
 end
 
-local function parseMember(str)
+function parseMember(str)
 	local k = nil
 	k, str = parseValue(str)
 	local val = nil
@@ -178,7 +178,7 @@ local function parseMember(str)
 	return k, val, str
 end
 
-local function parseValue(str)
+function parseValue(str)
 	local fchar = str:sub(1, 1)
 	if fchar == "{" then
 		return parseObject(str)
