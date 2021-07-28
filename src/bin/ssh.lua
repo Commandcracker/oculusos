@@ -411,7 +411,7 @@ local function newSession(conn, x, y, color)
 	local session = {}
 	local path = "shell"
 	if #args >= 2 and shell.resolveProgram(args[2]) then path = shell.resolveProgram(args[2]) end
-	session.thread = coroutine.create(function() shell.run(path) end)
+	session.thread = coroutine.create(function() os.run({supports_scroll=false, shell=shell, multishell=multishell}, shell.resolveProgram(path)) end)
 	if framebuffer then
 		local target = {}
 		local _target = framebuffer.new(x, y, color)

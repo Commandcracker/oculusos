@@ -1,7 +1,6 @@
 local multishell = multishell
 local parentShell = shell
 local parent = term.current()
-local redirect = scroll_window.create(parent)
 
 if multishell then
     multishell.setTitle( multishell.getCurrent(), "shell" )
@@ -18,7 +17,8 @@ local ProgramStack = {}
 local shell = {}
 local tEnv = {
     ["shell"] = shell,
-    ["multishell"] = multishell
+    ["multishell"] = multishell,
+    ["supports_scroll"] = _ENV.supports_scroll
 }
 
 -- Colours
@@ -31,6 +31,16 @@ else
     promptColour = colours.white
     textColour = colours.white
     bgColour = colours.black
+end
+
+local supports_scroll = term.isColour()
+
+if _ENV.supports_scroll ~= nil then
+    supports_scroll = _ENV.supports_scroll
+end
+
+if supports_scroll then
+    redirect = scroll_window.create(parent)
 end
 
 local function run(_sCommand, ...)
@@ -434,12 +444,21 @@ local function update()
     end
 end
 
+if fs.exists( "/.shellrc" ) then
+    pcall(shell.run("/.shellrc"))
+end
+
 local worker =
     coroutine.create(
     function()
         -- Print the header
-        term.redirect(redirect)
-        term.setCursorPos(1, 1)
+        if supports_scroll then
+            term.redirect(redirect)
+            term.setCursorPos(1, 1)
+        else
+            term.redirect(parent)
+        end
+        
         term.setBackgroundColor(bgColour)
 
         update()
@@ -448,7 +467,7 @@ local worker =
         end
 
         term.setTextColour(promptColour)
-        print("OculusOS")
+        write("OculusOS")
         term.setTextColour(textColour)
 
         --[[
@@ -479,9 +498,11 @@ local worker =
 
         -- The main interaction loop
         while running do
-            local scrollback = 1e3 --tonumber(settings.get("mbs.shell.scroll_max", 1e3))
-            if scrollback then
-                redirect.setMaxScrollback(scrollback)
+            if supports_scroll then
+                local scrollback = 1e3 --tonumber(settings.get("mbs.shell.scroll_max", 1e3))
+                if scrollback then
+                    redirect.setMaxScrollback(scrollback)
+                end
             end
 
             term.setBackgroundColor(bgColour)
@@ -507,6 +528,10 @@ local worker =
                 write(shell.dir() .. "> ")
             end
 
+            if supports_scroll then
+                redirect.setCursorPos(term.getCursorPos())
+            end
+
             term.setTextColour(textColour)
 
             local line
@@ -524,12 +549,14 @@ local worker =
                 break
             end
 
-            local _, y = term.getCursorPos()
-            redirect.setCursorThreshold(y)
+            if supports_scroll then
+                local _, y = term.getCursorPos()
+                redirect.setCursorThreshold(y)
+            end
 
             -- run the command
 
-            --local ok = shell.run(line)
+            local ok = true
 
             if string.find(line, "!!") then
                 if #history == 0 then
@@ -556,61 +583,77 @@ local worker =
                 end
 
                 for _, command in ipairs(oculusos.split(line, ";")) do
-                    shell.run(command)
+                    ok = shell.run(command)
                 end
             end
+            
+            if supports_scroll then
+                term.redirect(redirect)
+                redirect.endPrivateMode(not ok)
+                redirect.draw(0)
+            end
 
-            --term.redirect(redirect)
-            --redirect.endPrivateMode(not ok)
-            --redirect.draw(0)
         end
-
-        --term.redirect(parent)
+        if supports_scroll then
+            term.redirect(parent)
+        end
     end
 )
 
 local ok, filter = coroutine.resume(worker)
 
--- We run the main worker inside a coroutine, catching any potential scroll
--- events.
-while coroutine.status(worker) ~= "dead" do
-    local event = table.pack(coroutine.yield())
-    local e = event[1]
+if supports_scroll then
+    -- We run the main worker inside a coroutine, catching any potential scroll
+    -- events.
+    while coroutine.status(worker) ~= "dead" do
+        local event = table.pack(coroutine.yield())
+        local e = event[1]
 
-    -- Run the main REPL worker
-    if filter == nil or e == filter or e == "terminate" then
-        ok, filter = coroutine.resume(worker, table.unpack(event, 1))
-    end
-
-    -- Resize the terminal if required
-    if e == "term_resize" then
-        redirect.updateSize()
-        redirect.draw(scroll_offset or 0, true)
-    end
-
-    -- If we're in some interactive function, allow scrolling the input
-    if redirect.getCursorBlink() then
-        local change = 0
-        if e == "mouse_scroll" then
-            change = event[2]
-        elseif e == "key" and event[2] == keys.pageDown then
-            change = 10
-        elseif e == "key" and event[2] == keys.pageUp then
-            change = -10
-        elseif e == "key" or e == "paste" then
-            -- Reset offset if another key is pressed
-            change = -scroll_offset
+        -- Run the main REPL worker
+        if filter == nil or e == filter or e == "terminate" then
+            ok, filter = coroutine.resume(worker, table.unpack(event, 1))
         end
 
-        if change ~= 0 and term.current() == redirect and not redirect.isPrivateMode() then
-            scroll_offset = scroll_offset + change
-            if scroll_offset > 0 then
-                scroll_offset = 0
+        -- Resize the terminal if required
+        if e == "term_resize" then
+            redirect.updateSize()
+            redirect.draw(scroll_offset or 0, true)
+        end
+
+        -- If we're in some interactive function, allow scrolling the input
+        if redirect.getCursorBlink() then
+            local change = 0
+            if e == "mouse_scroll" then
+                change = event[2]
+            elseif e == "key" and event[2] == keys.pageDown then
+                change = 10
+            elseif e == "key" and event[2] == keys.pageUp then
+                change = -10
+            elseif e == "key" or e == "paste" then
+                -- Reset offset if another key is pressed
+                change = -scroll_offset
             end
-            if scroll_offset < -redirect.getTotalHeight() then
-                scroll_offset = -redirect.getTotalHeight()
+
+            if change ~= 0 and term.current() == redirect and not redirect.isPrivateMode() then
+                scroll_offset = scroll_offset + change
+                if scroll_offset > 0 then
+                    scroll_offset = 0
+                end
+                if scroll_offset < -redirect.getTotalHeight() then
+                    scroll_offset = -redirect.getTotalHeight()
+                end
+                redirect.draw(scroll_offset)
             end
-            redirect.draw(scroll_offset)
+        end
+    end
+else
+    while coroutine.status(worker) ~= "dead" do
+        local event = table.pack(coroutine.yield())
+        local e = event[1]
+
+        -- Run the main REPL worker
+        if filter == nil or e == filter or e == "terminate" then
+            ok, filter = coroutine.resume(worker, table.unpack(event, 1))
         end
     end
 end

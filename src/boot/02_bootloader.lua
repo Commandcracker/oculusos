@@ -301,11 +301,10 @@ if not CraftOS then
 	term.setBackgroundColor(colors.black)
 	term.clear()
 	term.setCursorPos(1,1)
+    term.setTextColour(colors.white)
     register_programs()
-
-    if fs.exists( "/.shellrc" ) then
-        pcall(shell.run("/.shellrc"))
-    end
+    term.clear()
+    term.setCursorPos(1,1)
 	shell.run("/bin/shell")
 	if term.isColour() then
 		term.setTextColour( colours.orange )
