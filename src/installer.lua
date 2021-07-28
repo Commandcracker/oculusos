@@ -291,23 +291,39 @@ local url_src = url.."src/"
 
 local tArgs = { ... }
 
+local minimized = true
+
 -- Run
 term.clear()
 term.setCursorPos(1,1)
 
 if tArgs[1] then
     _question = "Update OculusOS"
+	f = fs.open("/.system_info", "r")
+	if f then
+		system_info = decode(f.readLine())
+		if system_info.minimized ~= nil then
+			minimized = system_info.minimized
+		end
+		if system_info.git.branch ~= nil then
+			git.branch = system_info.git.branch
+		end
+	end
 else
     _question = "Install OculusOS"
 end
 
 if question(_question) then else
-    if term.isColor() then
-        term.setTextColour(colors.red)
-    end
-    print("Abort.")
-    term.setTextColour(colors.white)
+	printError("Abort.")
     return
+end
+
+if not tArgs[1] then
+	minimized = question("Minimize OculusOS")
+end
+
+if minimized ~= true then
+	url_build = url.."src/"
 end
 
 -- Download
@@ -427,7 +443,8 @@ table.insert(to_download,function()
 				branch = git.branch,
 				commit = decode(get("https://api.github.com/repos/"..git.owner..'/'..git.repo.."/git/refs/heads/"..git.branch)).object.sha
 			},
-            colord = term.isColor()
+            colord = term.isColor(),
+			minimized = minimized
         }
     ), "/.system_info")
 end)
