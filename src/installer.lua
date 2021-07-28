@@ -387,7 +387,7 @@ if tonumber(split(os.version(), ' ')[2]) <= 1.7 then
         download(url_build .. "fix/pastebin.lua", "/bin/pastebin")
     end)
 	table.insert(to_download,function()
-        download(url_build .. "fix/00_fix.lua", "/bin/00_fix")
+        download(url_build .. "fix/00_fix.lua", "/lib/00_fix")
     end)
 end
 
