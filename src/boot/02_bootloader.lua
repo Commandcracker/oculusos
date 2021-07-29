@@ -80,18 +80,70 @@ local function register_programs()
     -- Setup aliases
     shell.setAlias("cls", "clear")
     -- Setup completion functions
-    local function completion()
-        local completion = require "cc.shell.completion"
-        shell.setCompletionFunction("oculusos/programs/cat", completion.build(completion.file))
-        shell.setCompletionFunction("oculusos/programs/display", completion.build(completion.file))
-        shell.setCompletionFunction("oculusos/programs/touch", completion.build(completion.file))
-        shell.setCompletionFunction("oculusos/programs/tree", completion.build(completion.dir))
-        shell.setCompletionFunction("oculusos/programs/decrypt", completion.build(completion.dirOrFile))
-        shell.setCompletionFunction("oculusos/programs/encrypt", completion.build(completion.dirOrFile))
+    local function build(...)
+        local arguments = table.pack(...)
+        for i = 1, 1 do
+            local arg = arguments[i]
+            if arg ~= nil then
+                if type(arg) == "function" then
+                    arg = { arg }
+                    arguments[i] = arg
+                end
+
+                if type(arg[1]) ~= "function" then
+                    error(("Bad table entry #1 at argument #%d (expected function, got %s)"):format(i, type(arg[1])), 2)
+                end
+
+                if arg.many and i < arguments.n then
+                    error(("Unexpected 'many' field on argument #%d (should only occur on the last argument)"):format(i), 2)
+                end
+            end
+        end
+
+        return function(shell, index, text, previous)
+            local arg = arguments[index]
+            if not arg then
+                if index <= arguments.n then return end
+
+                arg = arguments[arguments.n]
+                if not arg or not arg.many then return end
+            end
+
+            return arg[1](shell, text, previous, table.unpack(arg, 2))
+        end
     end
 
-    pcall(completion)
+    local function dir(shell, text)
+        return fs.complete(text, shell.dir(), false, true)
+    end
+    
+    local function file(shell, text)
+        return fs.complete(text, shell.dir(), true, false)
+    end
+    
+    local function dirOrFile(shell, text, previous, add_space)
+        local results = fs.complete(text, shell.dir(), true, true)
+        if add_space then
+            for n = 1, #results do
+                local result = results[n]
+                if result:sub(-1) ~= "/" then
+                    results[n] = result .. " "
+                end
+            end
+        end
+        return results
+    end
+    
+    shell.setCompletionFunction("bin/cat", build(file))
+    shell.setCompletionFunction("bin/display", build(file))
+    shell.setCompletionFunction("bin/less", build(file))
+    shell.setCompletionFunction("bin/touch", build(file))
+    shell.setCompletionFunction("bin/tree", build(dir))
+    shell.setCompletionFunction("bin/decrypt", build(dirOrFile))
+    shell.setCompletionFunction("bin/encrypt", build(dirOrFile))
 
+
+    -- load libs
     local tPath = "/lib/"
     local tAll = fs.list(tPath)
 
