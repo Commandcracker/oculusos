@@ -133,6 +133,31 @@ local function register_programs()
         end
         return results
     end
+
+    local function programWithArgs(shell, text, previous, starting)
+        if #previous + 1 == starting then
+            local tCompletionInfo = shell.getCompletionInfo()
+            if text:sub(-1) ~= "/" and tCompletionInfo[shell.resolveProgram(text)] then
+                return { " " }
+            else
+                local results = shell.completeProgram(text)
+                for n = 1, #results do
+                    local sResult = results[n]
+                    if sResult:sub(-1) ~= "/" and tCompletionInfo[shell.resolveProgram(text .. sResult)] then
+                        results[n] = sResult .. " "
+                    end
+                end
+                return results
+            end
+        else
+            local program = previous[starting]
+            local resolved = shell.resolveProgram(program)
+            if not resolved then return end
+            local tCompletion = shell.getCompletionInfo()[resolved]
+            if not tCompletion then return end
+            return tCompletion.fnComplete(shell, #previous - starting + 1, text, { program, table.unpack(previous, starting + 1, #previous) })
+        end
+    end
     
     shell.setCompletionFunction("bin/cat", build(file))
     shell.setCompletionFunction("bin/display", build(file))
@@ -142,6 +167,8 @@ local function register_programs()
     shell.setCompletionFunction("bin/decrypt", build(dirOrFile))
     shell.setCompletionFunction("bin/encrypt", build(dirOrFile))
 
+    shell.setCompletionFunction("bin/shell", build({programWithArgs, 2, many = true }) )
+    shell.setCompletionFunction("bin/list", build(dir))
 
     -- load libs
     local tPath = "/lib/"
