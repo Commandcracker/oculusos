@@ -1,6 +1,6 @@
 # OculusOS
 
-OculusOS is a Linux like OS's for the minecraft mod ComputerCraft and ComputerCraft Tweaked
+OculusOS is a unix like OS's for the minecraft mod ComputerCraft and ComputerCraft Tweaked
 
 ## Installation
 
