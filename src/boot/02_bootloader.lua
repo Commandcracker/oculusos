@@ -182,6 +182,12 @@ local function register_programs()
         print("> "..tPath..tAll[item])
         --sleep(math.random())
     end
+
+    -- load pack
+    if fs.exists("/etc/pack/packages/pack/pack/lib/pack") then
+        dofile("/etc/pack/packages/pack/pack/lib/pack").loadPackages(shell)
+    end
+
     sleep(1)
 end
 

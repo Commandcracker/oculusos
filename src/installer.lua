@@ -1,4 +1,12 @@
--- Json
+local json = {}
+--[[
+       ___                  
+      |_  |                 
+        | | ___  ___  _ __  
+        | |/ __|/ _ \| '_ \ 
+    /\__/ /\__ \ (_) | | | |
+    \____/ |___/\___/|_| |_|
+]]
 ------------------------------------------------------------------ utils
 local controls = {["\n"]="\\n", ["\r"]="\\r", ["\t"]="\\t", ["\b"]="\\b", ["\f"]="\\f", ["\""]="\\\"", ["\\"]="\\\\"}
 
@@ -15,7 +23,7 @@ local function isArray(t)
 end
 
 local whites = {['\n']=true; ['\r']=true; ['\t']=true; [' ']=true; [',']=true; [':']=true}
-local function removeWhite(str)
+function json.removeWhite(str)
 	while whites[str:sub(1, 1)] do
 		str = str:sub(2)
 	end
@@ -82,11 +90,11 @@ local function encodeCommon(val, pretty, tabLevel, tTracking)
 	return str
 end
 
-local function encode(val)
+function json.encode(val)
 	return encodeCommon(val, false, 0, {})
 end
 
-local function encodePretty(val)
+function json.encodePretty(val)
 	return encodeCommon(val, true, 0, {})
 end
 
@@ -97,30 +105,30 @@ for k,v in pairs(controls) do
 	decodeControls[v] = k
 end
 
-local function parseBoolean(str)
+function json.parseBoolean(str)
 	if str:sub(1, 4) == "true" then
-		return true, removeWhite(str:sub(5))
+		return true, json.removeWhite(str:sub(5))
 	else
-		return false, removeWhite(str:sub(6))
+		return false, json.removeWhite(str:sub(6))
 	end
 end
 
-local function parseNull(str)
-	return nil, removeWhite(str:sub(5))
+function json.parseNull(str)
+	return nil, json.removeWhite(str:sub(5))
 end
 
 local numChars = {['e']=true; ['E']=true; ['+']=true; ['-']=true; ['.']=true}
-local function parseNumber(str)
+function json.parseNumber(str)
 	local i = 1
 	while numChars[str:sub(i, i)] or tonumber(str:sub(i, i)) do
 		i = i + 1
 	end
 	local val = tonumber(str:sub(1, i - 1))
-	str = removeWhite(str:sub(i))
+	str = json.removeWhite(str:sub(i))
 	return val, str
 end
 
-local function parseString(str)
+function json.parseString(str)
 	str = str:sub(2)
 	local s = ""
 	while str:sub(1,1) ~= "\"" do
@@ -137,85 +145,86 @@ local function parseString(str)
 
 		s = s .. next
 	end
-	return s, removeWhite(str:sub(2))
+	return s, json.removeWhite(str:sub(2))
 end
 
-local function parseArray(str)
-	str = removeWhite(str:sub(2))
+function json.parseArray(str)
+	str = json.removeWhite(str:sub(2))
 
 	local val = {}
 	local i = 1
 	while str:sub(1, 1) ~= "]" do
 		local v = nil
-		v, str = parseValue(str)
+		v, str = json.parseValue(str)
 		val[i] = v
 		i = i + 1
-		str = removeWhite(str)
+		str = json.removeWhite(str)
 	end
-	str = removeWhite(str:sub(2))
+	str = json.removeWhite(str:sub(2))
 	return val, str
 end
 
-local function parseObject(str)
-	str = removeWhite(str:sub(2))
+function json.parseObject(str)
+	str = json.removeWhite(str:sub(2))
 
 	local val = {}
 	while str:sub(1, 1) ~= "}" do
 		local k, v = nil, nil
-		k, v, str = parseMember(str)
+		k, v, str = json.parseMember(str)
 		val[k] = v
-		str = removeWhite(str)
+		str = json.removeWhite(str)
 	end
-	str = removeWhite(str:sub(2))
+	str = json.removeWhite(str:sub(2))
 	return val, str
 end
 
-function parseMember(str)
+function json.parseMember(str)
 	local k = nil
-	k, str = parseValue(str)
+	k, str = json.parseValue(str)
 	local val = nil
-	val, str = parseValue(str)
+	val, str = json.parseValue(str)
 	return k, val, str
 end
 
-function parseValue(str)
+function json.parseValue(str)
 	local fchar = str:sub(1, 1)
 	if fchar == "{" then
-		return parseObject(str)
+		return json.parseObject(str)
 	elseif fchar == "[" then
-		return parseArray(str)
+		return json.parseArray(str)
 	elseif tonumber(fchar) ~= nil or numChars[fchar] then
-		return parseNumber(str)
+		return json.parseNumber(str)
 	elseif str:sub(1, 4) == "true" or str:sub(1, 5) == "false" then
-		return parseBoolean(str)
+		return json.parseBoolean(str)
 	elseif fchar == "\"" then
-		return parseString(str)
+		return json.parseString(str)
 	elseif str:sub(1, 4) == "null" then
-		return parseNull(str)
+		return json.parseNull(str)
 	end
 	return nil
 end
 
-local function decode(str)
-	str = removeWhite(str)
-	t = parseValue(str)
+function json.decode(str)
+	str = json.removeWhite(str)
+	t = json.parseValue(str)
 	return t
 end
 
-local function decodeFromFile(path)
+function json.decodeFromFile(path)
 	local file = assert(fs.open(path, "r"))
-	local decoded = decode(file.readAll())
+	local decoded = json.decode(file.readAll())
 	file.close()
 	return decoded
 end
 
--- Functions
-local function save(data,path)
-    local file = fs.open(path,"w")
-    file.write(data)
-    file.close()
-    print(path)
-end
+--[[
+      __                  _   _                 
+     / _|                | | (_)                
+    | |_ _   _ _ __   ___| |_ _  ___  _ __  ___ 
+    |  _| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
+    | | | |_| | | | | (__| |_| | (_) | | | \__ \
+    |_|  \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
+]]
 
 local function get(url)
     local response = http.get( url )
@@ -228,16 +237,12 @@ local function get(url)
     return sResponse
 end
 
-local function download(url, path)
-    save(get(url),path)
-end
-
-local function question(question)
-    if question == nil then else
+local function question(_question)
+    if _question == nil then else
         if term.isColor() then
             term.setTextColour(colors.orange)
         end
-        term.write(question.."? [")
+        term.write(_question.."? [")
         if term.isColor() then
             term.setTextColour(colors.lime)
         end
@@ -277,38 +282,74 @@ local function split(string, delimiter)
     return result
 end
 
--- Variables
+local function save(data,path, dontPrint)
+    local file = fs.open(path,"w")
+    file.write(data)
+    file.close()
+	if not dontPrint then
+		print(path)
+	end
+end
 
+local function download(url, path, dontPrint)
+    local request, err = http.get(url)
+    if request then
+		save(request.readAll(), path, dontPrint)
+        request.close()
+    else
+        printError("Faild to download: "..url)
+        printError(err)
+    end
+end
+
+local function loadAPIFromURL(url, name)
+    local api_path = "/tmp/"..name
+    download(url, api_path, true)
+    local api = dofile(api_path)
+    fs.delete(api_path)
+    return api
+end
+
+local function setTextColour(color)
+	if term.isColor() then
+    	term.setTextColour(color)
+	end
+end
+
+-- Variables
 local git = {
     owner = "Commandcracker",
     repo = "oculusos",
     branch = "master"
 }
-
 local url = "https://raw.githubusercontent.com/"..git.owner..'/'..git.repo..'/'..git.branch..'/'
 local url_build = url.."build/"
 local url_src = url.."src/"
-
-local tArgs = { ... }
-
+local args = { ... }
 local minimized = true
+local to_download = {}
+local update = false
 
 -- Run
-term.clear()
-term.setCursorPos(1,1)
+if args[1] then
+	update = true
+end
 
-if tArgs[1] then
-    _question = "Update OculusOS"
-	f = fs.open("/.system_info", "r")
-	if f then
-		system_info = decode(f.readLine())
-		if system_info.minimized ~= nil then
-			minimized = system_info.minimized
-		end
-		if system_info.git.branch ~= nil then
-			git.branch = system_info.git.branch
-		end
+if fs.exists("/.system_info") then
+	update = true
+	local file = fs.open("/.system_info", "r")
+	local system_info = json.decode(file.readLine())
+	if system_info.minimized ~= nil then
+		minimized = system_info.minimized
 	end
+	if system_info.git.branch ~= nil then
+		git.branch = system_info.git.branch
+	end
+	file.close()
+end
+
+if update then
+    _question = "Update OculusOS"
 else
     _question = "Install OculusOS"
 end
@@ -318,7 +359,7 @@ if question(_question) then else
     return
 end
 
-if not tArgs[1] then
+if not update then
 	minimized = question("Minimize OculusOS")
 end
 
@@ -326,18 +367,60 @@ if minimized ~= true then
 	url_build = url.."src/"
 end
 
--- Download
-print()
-if term.isColor() then
-    term.setTextColour(colors.lime)
-end
-print("Downloading")
-if term.isColor() then
-    term.setTextColour(colors.blue)
-end
-print()
+-- install pack
+if not update then
 
-local to_download = {}
+	local pack_lib_url, pack_package_name
+
+	if minimized then
+		pack_lib_url = "https://raw.githubusercontent.com/Commandcracker/CC-pack/master/build/lib/pack.lua"
+		pack_package_name = "pack"
+	else
+		pack_lib_url = "https://raw.githubusercontent.com/Commandcracker/CC-pack/master/src/lib/pack.lua"
+		pack_package_name = "pack-src"
+	end
+
+	term.setTextColour(colors.white)
+	print("Installing Pack")
+
+	local function installPack()
+		local pack = loadAPIFromURL(pack_lib_url, "pack")
+
+		if not fs.exists("/etc/pack/sources.list") then
+			local sources_list = fs.open("/etc/pack/sources.list", "w")
+			sources_list.writeLine("pack https://raw.githubusercontent.com/Commandcracker/CC-pack/master/packages.json")
+			sources_list.writeLine("commandcracker https://raw.githubusercontent.com/Commandcracker/CC-packages/master/packages.json")
+			sources_list.close()
+			pack.fetchSources(true)
+		end
+
+		for source,Package in pairs(pack.getPackages()) do
+			for name,p in pairs(Package) do
+				if name == pack_package_name then
+					if pack.isPackageInstalled(source.."/"..name) then
+						printError("Pack is already installed")
+						return true
+					end
+					pack.installPackage(source.."/"..name, p, shell)
+					return true
+				end
+			end
+		end
+		return false
+	end
+
+	if not installPack() then printError("Faild to install pack")end
+end
+
+if not update then
+	term.setTextColour(colors.white)
+	print("Installing OculusOS")
+end
+
+-- Download
+setTextColour(colors.lime)
+print("Downloading")
+setTextColour(colors.blue)
 
 -- .shellrc
 
@@ -438,13 +521,13 @@ parallel.waitForAll(
 
 -- version
 table.insert(to_download,function()
-    save(encode(
+    save(json.encode(
         {
 			git = {
 				owner = git.owner,
 				repo = git.repo,
 				branch = git.branch,
-				commit = decode(get("https://api.github.com/repos/"..git.owner..'/'..git.repo.."/git/refs/heads/"..git.branch)).object.sha
+				commit = json.decode(get("https://api.github.com/repos/"..git.owner..'/'..git.repo.."/git/refs/heads/"..git.branch)).object.sha
 			},
             colord = term.isColor(),
 			minimized = minimized
@@ -455,18 +538,14 @@ end)
 parallel.waitForAll(table.unpack(to_download))
 
 -- Finished
-print()
-if not tArgs[1] and settings and not pocket then
+if not update and settings and not pocket then
     settings.set("shell.allow_disk_startup", false)
     settings.save()
 end
 
 term.setTextColour(colors.white)
 if question("Reboot now") then
-    print()
-    if term.isColor() then
-        term.setTextColor(colors.orange)
-    end
+    setTextColour(colors.orange)
     print("Rebooting computer")
     sleep(1)
     os.reboot()
