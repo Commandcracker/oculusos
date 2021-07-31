@@ -9,14 +9,13 @@ const license_map = {
     "lib/bigfont.lua": "bigfont.txt",
     "lib/cprint.lua": "cprint.txt",
     "lib/cryptoNet.lua": "cryptonet.txt",
-    "lib/framebuffer.lua": "framebuffer.txt",
+    "lib/framebuffer.lua": "framebuffer.txt"
     // bin
     //"lib/readline.lua": "metis.txt",
     //"lib/stack_trace.lua": "metis.txt",
     //"lib/scroll_window.lua": "metis.txt",
     //"lib/argparse.lua": "metis.txt",
     //"bin/shell.lua": "mbs.txt",
-    "bin/matrix.lua": "matrix.txt"
 }
 
 function minify(input_file, output_file, options) {

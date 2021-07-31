@@ -45,7 +45,6 @@ installer
 
 | Modified | Program                                                       | Maintainer                                           |
 |----------|---------------------------------------------------------------|------------------------------------------------------|
-|          | [Matrix](https://pastebin.com/KQjmtASU)                       | [Felix Maxwell](https://pastebin.com/u/felixmaxwell) |
 | X        | [Net Shell/NSH](https://pastebin.com/X5Fysdi4)                | [lyqyd](https://github.com/lyqyd)                    |
 | X        | [mbs/Mildly better shell](https://github.com/SquidDev-CC/mbs) | [SquidDev](https://github.com/SquidDev)              |
 
