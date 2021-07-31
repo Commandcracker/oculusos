@@ -504,18 +504,6 @@ parallel.waitForAll(
 				end)
 			end
         end
-    end,
-    -- bin - not_pocket
-    function()
-        if not pocket then
-            for item in get(url_src.."bin/not_pocket/index"):gmatch("([^\n]*)\n?") do
-				if item ~= "" then
-					table.insert(to_download,function()
-						download(url_build .. "bin/not_pocket/"..item..".lua", "/bin/"..item)
-					end)
-				end
-            end
-        end
     end
 )
 
