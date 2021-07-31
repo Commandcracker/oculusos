@@ -444,8 +444,14 @@ local function update()
     end
 end
 
+local default_shellrc = {
+    PS1="&b(&e\\h&b)-[&0\\w&b]\n&e# "
+}
+
+local shellrc
+
 if fs.exists( "/.shellrc" ) then
-    pcall(shell.run("/.shellrc"))
+    shellrc = dofile("/.shellrc")
 end
 
 local running_command = false
@@ -518,19 +524,22 @@ local worker =
                 sLabel = "oculusos"
             end
 
-            if PS1 then
-                local ps1 = PS1:gsub("\\w", '/'..shell.dir())
-                if os.date then
-                    ps1 = ps1:gsub("\\t", os.date("%H:%M:%S"))
-                    ps1 = ps1:gsub("\\T", os.date("%I:%M:%S"))
-                    ps1 = ps1:gsub("\\d", os.date("%a %b %y"))
-                    ps1 = ps1:gsub("\\@", os.date("%I:%M %p"))
-                    ps1 = ps1:gsub("\\A", os.date("%H:%M"))
-                end
-                cprint.cwrite(ps1:gsub("\\h", sLabel))
+            local ps1
+            if shellrc and shellrc.PS1 then
+                ps1 = shellrc.PS1
             else
-                write(shell.dir() .. "> ")
+                ps1 = default_shellrc.PS1
             end
+
+            ps1 = ps1:gsub("\\w", '/'..shell.dir())
+            if os.date then
+                ps1 = ps1:gsub("\\t", os.date("%H:%M:%S"))
+                ps1 = ps1:gsub("\\T", os.date("%I:%M:%S"))
+                ps1 = ps1:gsub("\\d", os.date("%a %b %y"))
+                ps1 = ps1:gsub("\\@", os.date("%I:%M %p"))
+                ps1 = ps1:gsub("\\A", os.date("%H:%M"))
+            end
+            cprint.cwrite(ps1:gsub("\\h", sLabel))
 
             if supports_scroll then
                 redirect.setCursorPos(term.getCursorPos())

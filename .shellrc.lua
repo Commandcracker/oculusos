@@ -32,4 +32,6 @@
 		f black
 ]]
 
-_G.PS1="&b(&e\\h&b)-[&0\\w&b]\n&e# "
+return {
+	PS1="&b(&e\\h&b)-[&0\\w&b]\n&e# "
+}
