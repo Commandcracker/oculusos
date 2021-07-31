@@ -16,8 +16,7 @@ const license_map = {
     //"lib/scroll_window.lua": "metis.txt",
     //"lib/argparse.lua": "metis.txt",
     //"bin/shell.lua": "mbs.txt",
-    "bin/matrix.lua": "matrix.txt",
-    "bin/not_pocket/mirror.lua": "mirror.txt"
+    "bin/matrix.lua": "matrix.txt"
 }
 
 function minify(input_file, output_file, options) {
