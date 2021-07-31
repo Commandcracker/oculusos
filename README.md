@@ -42,7 +42,6 @@ installer
 ### Programms
 
 - [Matrix](https://pastebin.com/KQjmtASU) by [Felix Maxwell](https://pastebin.com/u/felixmaxwell)
-- [Mirror](http://pastebin.com/DW3LCC3L) by [Wojbie](https://pastebin.com/u/Wojbie)
 - Modified [Net Shell/NSH](https://pastebin.com/X5Fysdi4) by [lyqyd](https://github.com/lyqyd)
 - Modified [mbs/Mildly better shell](https://github.com/SquidDev-CC/mbs) by [SquidDev](https://github.com/SquidDev)
 
