@@ -388,8 +388,8 @@ if not update then
 
 		if not fs.exists("/etc/pack/sources.list") then
 			local sources_list = fs.open("/etc/pack/sources.list", "w")
-			sources_list.writeLine("pack https://raw.githubusercontent.com/Commandcracker/CC-pack/master/packages.json")
-			sources_list.writeLine("commandcracker https://raw.githubusercontent.com/Commandcracker/CC-packages/master/packages.json")
+			sources_list.writeLine("pack https://raw.githubusercontent.com/Commandcracker/CC-pack/master/pack.json")
+			sources_list.writeLine("commandcracker https://raw.githubusercontent.com/Commandcracker/CC-packages/master/pack.json")
 			sources_list.close()
 			pack.fetchSources(true)
 		end
