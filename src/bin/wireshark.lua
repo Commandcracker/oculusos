@@ -107,7 +107,7 @@ openModems(channel)
 term.clear()
 term.setCursorPos(1,1)
 
-sniffed = {}
+local sniffed = {}
 
 local function sniff()
     while true do

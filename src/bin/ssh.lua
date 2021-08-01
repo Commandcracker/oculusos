@@ -6,7 +6,7 @@ local sshAPI = {
 	connList = connections
 }
 
-local bufferDirs = {"/oculusos/apis/","/","/usr/apis/","/disk/"}
+local bufferDirs = {"/lib/","/","/usr/apis/","/disk/"}
 
 if not framebuffer then
 	for i = 1, #bufferDirs do

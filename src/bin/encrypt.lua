@@ -1,4 +1,4 @@
-local function question(question)
+local function question(_question)
     if question == nil then else
         term.write(question.."? [Y/n] ")
     end
