@@ -80,7 +80,9 @@ local function register_programs()
     -- Setup aliases
     shell.setAlias("cls", "clear")
     -- Setup completion functions
-    local function build(...)
+    local completion = {}
+
+    function completion.build(...)
         local arguments = table.pack(...)
         for i = 1, 1 do
             local arg = arguments[i]
@@ -113,15 +115,15 @@ local function register_programs()
         end
     end
 
-    local function dir(shell, text)
+    function completion.dir(shell, text)
         return fs.complete(text, shell.dir(), false, true)
     end
     
-    local function file(shell, text)
+    function completion.file(shell, text)
         return fs.complete(text, shell.dir(), true, false)
     end
     
-    local function dirOrFile(shell, text, previous, add_space)
+    function completion.dirOrFile(shell, text, previous, add_space)
         local results = fs.complete(text, shell.dir(), true, true)
         if add_space then
             for n = 1, #results do
@@ -134,7 +136,7 @@ local function register_programs()
         return results
     end
 
-    local function programWithArgs(shell, text, previous, starting)
+    function completion.programWithArgs(shell, text, previous, starting)
         if #previous + 1 == starting then
             local tCompletionInfo = shell.getCompletionInfo()
             if text:sub(-1) ~= "/" and tCompletionInfo[shell.resolveProgram(text)] then
@@ -158,17 +160,24 @@ local function register_programs()
             return tCompletion.fnComplete(shell, #previous - starting + 1, text, { program, table.unpack(previous, starting + 1, #previous) })
         end
     end
-    
-    shell.setCompletionFunction("bin/cat", build(file))
-    shell.setCompletionFunction("bin/display", build(file))
-    shell.setCompletionFunction("bin/less", build(file))
-    shell.setCompletionFunction("bin/touch", build(file))
-    shell.setCompletionFunction("bin/tree", build(dir))
-    shell.setCompletionFunction("bin/decrypt", build(dirOrFile))
-    shell.setCompletionFunction("bin/encrypt", build(dirOrFile))
 
-    shell.setCompletionFunction("bin/shell", build({programWithArgs, 2, many = true }) )
-    shell.setCompletionFunction("bin/list", build(dir))
+    function completion.completeProgram( shell, nIndex, sText, tPreviousText )
+        if nIndex == 1 then
+            return shell.completeProgram( sText )
+        end
+    end
+    
+    shell.setCompletionFunction("bin/cat", completion.build(completion.file))
+    shell.setCompletionFunction("bin/display", completion.build(completion.file))
+    shell.setCompletionFunction("bin/less", completion.build(completion.file))
+    shell.setCompletionFunction("bin/touch", completion.build(completion.file))
+    shell.setCompletionFunction("bin/tree", completion.build(completion.dir))
+    shell.setCompletionFunction("bin/decrypt", completion.build(completion.dirOrFile))
+    shell.setCompletionFunction("bin/encrypt", completion.build(completion.dirOrFile))
+
+    shell.setCompletionFunction("bin/shell", completion.build({completion.programWithArgs, 2, many = true }) )
+    shell.setCompletionFunction("bin/list", completion.build(completion.dir))
+    shell.setCompletionFunction("bin/which", completion.completeProgram)
 
     -- load libs
     local tPath = "/lib/"

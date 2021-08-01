@@ -1,0 +1,1 @@
+local a={...}if not a[1]then print("Usage: which <program>")return end;local b=shell.resolveProgram(a[1])if b then print("/"..b)else printError(a[1].." not found")end
