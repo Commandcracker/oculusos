@@ -91,14 +91,6 @@ local function register_programs()
                     arg = { arg }
                     arguments[i] = arg
                 end
-
-                if type(arg[1]) ~= "function" then
-                    error(("Bad table entry #1 at argument #%d (expected function, got %s)"):format(i, type(arg[1])), 2)
-                end
-
-                if arg.many and i < arguments.n then
-                    error(("Unexpected 'many' field on argument #%d (should only occur on the last argument)"):format(i), 2)
-                end
             end
         end
 
