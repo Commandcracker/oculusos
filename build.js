@@ -6,10 +6,10 @@ const path = require("path");
 const license_map = {
     // lib
     //"lib/aes.lua": "aeslua.txt",
-    "lib/bigfont.lua": "bigfont.txt",
-    "lib/cprint.lua": "cprint.txt",
-    "lib/cryptoNet.lua": "cryptonet.txt",
-    "lib/framebuffer.lua": "framebuffer.txt"
+    [path.join("lib","bigfont.lua")]: "bigfont.txt",
+    [path.join("lib","cprint.lua")]: "cprint.txt",
+    [path.join("lib","cryptoNet.lua")]: "cryptonet.txt",
+    [path.join("lib","framebuffer.lua")]: "framebuffer.txt"
     // bin
     //"lib/readline.lua": "metis.txt",
     //"lib/stack_trace.lua": "metis.txt",

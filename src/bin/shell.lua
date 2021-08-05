@@ -3,7 +3,7 @@ local parentShell = shell
 local parent = term.current()
 
 if multishell then
-    multishell.setTitle( multishell.getCurrent(), "shell" )
+    multishell.setTitle(multishell.getCurrent(), "shell")
 end
 
 local Dir = (parentShell and parentShell.dir()) or ""
@@ -15,11 +15,23 @@ local running = true
 local ProgramStack = {}
 
 local shell = {}
-local tEnv = {
-    ["shell"] = shell,
-    ["multishell"] = multishell,
-    ["supports_scroll"] = _ENV.supports_scroll
-}
+
+local make_package
+if fs.exists("rom/modules/main/cc/require.lua") then
+    make_package = dofile("rom/modules/main/cc/require.lua").make
+end
+
+local function createShellEnv(dir)
+    local env = {
+        shell = shell,
+        multishell = multishell,
+        supports_scroll = _ENV.supports_scroll
+    }
+    if make_package then
+        env.require, env.package = make_package(env, dir)
+    end
+    return env
+end
 
 -- Colours
 local promptColour, textColour, bgColour
@@ -54,7 +66,10 @@ local function run(_sCommand, ...)
             end
             multishell.setTitle(multishell.getCurrent(), sTitle)
         end
-        local result = os.run(tEnv, sPath, ...)
+        local sDir = fs.getDir(sPath)
+        local env = createShellEnv(sDir)
+        env.arg = { [0] = _sCommand, ... }
+        local result = os.run(env, sPath, ...)
         ProgramStack[#ProgramStack] = nil
         if multishell then
             if #ProgramStack > 0 then
@@ -319,9 +334,9 @@ if multishell then
         if sCommand then
             local sPath = shell.resolveProgram(sCommand)
             if sPath == "rom/programs/shell" then
-                return multishell.launch(tEnv, sPath, table.unpack(tWords, 2))
+                return multishell.launch(createShellEnv("rom/programs"), sPath, table.unpack(tWords, 2))
             elseif sPath ~= nil then
-                return multishell.launch(tEnv, "rom/programs/shell", sCommand, table.unpack(tWords, 2))
+                return multishell.launch(createShellEnv("rom/programs"), "rom/programs/shell", sCommand, table.unpack(tWords, 2))
             else
                 printError("No such program")
             end
@@ -445,12 +460,12 @@ local function update()
 end
 
 local default_shellrc = {
-    PS1="&b(&e\\h&b)-[&0\\w&b]\n&e# "
+    PS1 = "&b(&e\\h&b)-[&0\\w&b]\n&e# "
 }
 
 local shellrc
 
-if fs.exists( "/.shellrc" ) then
+if fs.exists("/.shellrc") then
     shellrc = dofile("/.shellrc")
 end
 
@@ -466,7 +481,7 @@ local worker =
         else
             term.redirect(parent)
         end
-        
+
         term.setBackgroundColor(bgColour)
 
         update()
@@ -503,7 +518,6 @@ local worker =
                 end
             end
         end]]
-
         -- The main interaction loop
         while running do
             if supports_scroll then
@@ -531,7 +545,7 @@ local worker =
                 ps1 = default_shellrc.PS1
             end
 
-            ps1 = ps1:gsub("\\w", '/'..shell.dir())
+            ps1 = ps1:gsub("\\w", "/" .. shell.dir())
             if os.date then
                 ps1 = ps1:gsub("\\t", os.date("%H:%M:%S"))
                 ps1 = ps1:gsub("\\T", os.date("%I:%M:%S"))
@@ -601,13 +615,12 @@ local worker =
                     running_command = false
                 end
             end
-            
+
             if supports_scroll then
                 term.redirect(redirect)
                 redirect.endPrivateMode(not ok)
                 redirect.draw(0)
             end
-
         end
         if supports_scroll then
             term.redirect(parent)
