@@ -333,10 +333,10 @@ if multishell then
         local sCommand = tWords[1]
         if sCommand then
             local sPath = shell.resolveProgram(sCommand)
-            if sPath == "rom/programs/shell" then
-                return multishell.launch(createShellEnv("rom/programs"), sPath, table.unpack(tWords, 2))
+            if sPath == "rom/programs/shell" or sPath == "bin/shell" then
+                return multishell.launch(createShellEnv("rom/programs"), "bin/shell", table.unpack(tWords, 2))
             elseif sPath ~= nil then
-                return multishell.launch(createShellEnv("rom/programs"), "rom/programs/shell", sCommand, table.unpack(tWords, 2))
+                return multishell.launch(createShellEnv("rom/programs"), "bin/shell", sCommand, table.unpack(tWords, 2))
             else
                 printError("No such program")
             end
