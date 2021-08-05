@@ -649,7 +649,7 @@ if supports_scroll then
         end
 
         -- If we're in some interactive function, allow scrolling the input
-        if not running_command then
+        if not running_command or (redirect.getCursorBlink and redirect.getCursorBlink()) then
             local change = 0
             if e == "mouse_scroll" then
                 change = event[2]
