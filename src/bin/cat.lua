@@ -6,25 +6,18 @@ if #tArgs == 0 then
 end
 
 -- Error checking
-local sPath = shell.resolve( tArgs[1] )
-local bReadOnly = fs.isReadOnly( sPath )
-if fs.exists( sPath ) and fs.isDir( sPath ) then
-	printError( "Cannot cat a directory." )
+local sPath = shell.resolve(tArgs[1])
+local bReadOnly = fs.isReadOnly(sPath)
+if fs.exists(sPath) and fs.isDir(sPath) then
+	printError("Cannot cat a directory.")
 	return
 end
 
 if fs.exists( sPath ) then
-    local file = io.open( sPath, "r" )
-    local sLine = file:read()
-    print(sLine)
-    while sLine do
-        sLine = file:read()
-        if sLine then
-            print(sLine)
-        end
-    end
-    file:close()
+    local file = fs.open( sPath, "rb" )
+    print(file.readAll())
+    file.close()
 else
-    printError( "file not found" )
+    printError("File not found")
     return
 end
