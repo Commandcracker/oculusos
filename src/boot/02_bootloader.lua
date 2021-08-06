@@ -397,6 +397,12 @@ if not CraftOS then
     register_programs()
     term.clear()
     term.setCursorPos(1,1)
+
+    if not fs.exists("/root") then
+        fs.makeDir("/root")
+    end
+
+    shell.setDir("/root")
 	shell.run("/bin/shell")
 	if term.isColour() then
 		term.setTextColour( colours.orange )

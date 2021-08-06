@@ -137,6 +137,11 @@ function shell.setPath(p)
 end
 function shell.resolve(_sPath)
     local sStartChar = string.sub(_sPath, 1, 1)
+
+    if sStartChar == "~" then
+        return fs.combine("/root", string.sub(_sPath, 2))
+    end
+
     if sStartChar == "/" or sStartChar == "\\" then
         return fs.combine("", _sPath)
     else
@@ -545,7 +550,15 @@ local worker =
                 ps1 = default_shellrc.PS1
             end
 
-            ps1 = ps1:gsub("\\w", "/" .. shell.dir())
+            local dir = shell.dir()
+
+            if string.sub(dir, 1, 4) == "root" then
+                dir = "~"..string.sub(dir, 5)
+            else
+                dir = "/"..dir
+            end
+
+            ps1 = ps1:gsub("\\w", dir)
             if os.date then
                 ps1 = ps1:gsub("\\t", os.date("%H:%M:%S"))
                 ps1 = ps1:gsub("\\T", os.date("%I:%M:%S"))
