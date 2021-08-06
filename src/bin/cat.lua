@@ -7,7 +7,6 @@ end
 
 -- Error checking
 local sPath = shell.resolve(tArgs[1])
-local bReadOnly = fs.isReadOnly(sPath)
 if fs.exists(sPath) and fs.isDir(sPath) then
 	printError("Cannot cat a directory.")
 	return
