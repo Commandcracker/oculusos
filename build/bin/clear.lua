@@ -1,1 +1,1 @@
-local a,b=term.getCursorPos()term.scroll(b-1)term.setCursorPos(1,1)
+local a={...}local function b()local c=arg[0]or fs.getName(shell.getRunningProgram())print("Usages:")print(c)print(c.." screen")print(c.." palette")print(c.." all")end;local function d()local e,f=term.getCursorPos()term.scroll(f-1)term.setCursorPos(1,1)end;local function g()for h=0,15 do term.setPaletteColour(math.pow(2,h),term.nativePaletteColour(math.pow(2,h)))end end;local i=a[1]or"screen"if i=="screen"then d()elseif i=="palette"then g()elseif i=="all"then d()g()else b()end
