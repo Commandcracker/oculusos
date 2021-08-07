@@ -227,14 +227,16 @@ end
 ]]
 
 local function get(url)
-    local response = http.get( url )
-    if not response then
-        return nil
+    local request, err = http.get(url)
+    if request then
+		local response = request.readAll()
+        request.close()
+		return response
+    else
+        printError("Faild to get: "..url)
+        printError(err)
+		error()
     end
-
-    local sResponse = response.readAll()
-    response.close()
-    return sResponse
 end
 
 local function question(_question)
@@ -269,6 +271,7 @@ local function question(_question)
     end
 end
 
+-- String
 local function split(string, delimiter)
     local result = { }
     local from = 1
@@ -282,6 +285,25 @@ local function split(string, delimiter)
     return result
 end
 
+local function endsWith(str, ending)
+	return ending == "" or string.sub(str, -#ending) == ending
+end
+
+function startsWith(str, match)
+	return string.sub(str, 1, #match) == match
+end
+
+-----
+local function foramtSize(nSpace)
+	if nSpace >= 1000 * 1000 then
+		return (math.floor( nSpace / (100 * 1000) ) / 10) .. "MB"
+	elseif nSpace >= 1000 then
+		return (math.floor( nSpace / 100 ) / 10) .. "KB" 
+	else
+		return nSpace .. "B"
+	end
+end
+
 local function save(data,path, dontPrint)
     local file = fs.open(path,"w")
     file.write(data)
@@ -292,14 +314,7 @@ local function save(data,path, dontPrint)
 end
 
 local function download(url, path, dontPrint)
-    local request, err = http.get(url)
-    if request then
-		save(request.readAll(), path, dontPrint)
-        request.close()
-    else
-        printError("Faild to download: "..url)
-        printError(err)
-    end
+	save(get(url), path, dontPrint)
 end
 
 local function loadAPIFromURL(url, name)
@@ -322,9 +337,6 @@ local git = {
     repo = "oculusos",
     branch = "master"
 }
-local url = "https://raw.githubusercontent.com/"..git.owner..'/'..git.repo..'/'..git.branch..'/'
-local url_build = url.."build/"
-local url_src = url.."src/"
 local args = { ... }
 local minimized = true
 local to_download = {}
@@ -363,9 +375,118 @@ if not update then
 	minimized = question("Minimize OculusOS")
 end
 
-if minimized ~= true then
-	url_build = url.."src/"
+-- setup tree
+local tree = json.decode(get("https://api.github.com/repos/"..git.owner.."/"..git.repo.."/git/trees/"..git.branch.."?recursive=1"))
+
+if tree.message then
+	printError("GitHub returned the error: "..tree.message)
+	error()
 end
+
+local base = "build"
+
+if minimized ~= true then
+	base = "src"
+end
+
+local files = {
+	[base.."/boot/*"]      = "/boot/",
+	[base.."/lib/*"]       = "/lib/",
+	[base.."/bin/*"]       = "/bin/",
+	[base.."/startup.lua"] = "/startup"
+}
+
+-- .shellrc
+if not fs.exists( ".shellrc" ) then
+	files[".shellrc.lua"] = "/.shellrc"
+end
+
+-- Bootscreen
+local bootscreen = "bootscreen/"
+
+if turtle then
+    bootscreen = bootscreen.."turtle/"
+else
+    if pocket then
+        bootscreen = bootscreen.."pocket/"
+    else
+        bootscreen = bootscreen.."computer/"
+    end
+end
+
+if term.isColor() then
+    bootscreen = bootscreen.."colord.nfp"
+else
+    bootscreen = bootscreen.."default.nfp"
+end
+
+files[bootscreen] = "/.bootscreen"
+
+-- Programs - fix
+if shell.resolveProgram("/rom/programs/http/wget") == nil then
+	files[base.."/fix/wget.lua"] = "/bin/wget"
+end
+
+if tonumber(split(os.version(), ' ')[2]) <= 1.7 then
+	files[base.."/fix/pastebin.lua"] = "/bin/pastebin"
+	files[base.."/fix/00_fix.lua"] = "/lib/00_fix"
+end
+
+-- resolve *
+for _,folder in pairs(tree.tree) do
+	if folder.type == "tree" and files[folder.path.."/*"] ~= nil then
+		for _,file in pairs(tree.tree) do
+			if file.type == "blob" and folder.path == string.sub(file.path, 1, #folder.path) then
+				local local_path = files[folder.path.."/*"]..string.sub(file.path, #folder.path+2)
+
+				-- remove .lua
+				if endsWith(local_path, ".lua") == true then
+					local_path = string.sub(local_path, 1, -5)
+				end
+
+				-- add local_path to files
+				files[file.path] = local_path
+			end
+		end
+
+		files[folder.path.."/*"] = nil
+	end
+end
+
+-- add files to to_download
+local size = 0
+
+for _,file in pairs(tree.tree) do
+	if file.type == "blob" and files[file.path] ~= nil then
+		size = size + file.size
+
+		table.insert(to_download,function()
+			download("https://raw.githubusercontent.com/"..git.owner..'/'..git.repo..'/'..git.branch..'/'..file.path, files[file.path])
+		end)
+
+	end
+end
+
+if not update and size > fs.getFreeSpace("/") then
+	printError("Your drive("..foramtSize(fs.getFreeSpace("/"))..") can't fit OculusOS("..foramtSize(size)..")")
+	error()
+end
+
+-- version
+table.insert(to_download,function()
+    save(json.encode(
+        {
+			git = {
+				owner = git.owner,
+				repo = git.repo,
+				branch = git.branch,
+				commit = tree.sha
+			},
+            colord = term.isColor(),
+			minimized = minimized
+        }
+    ), "/.system_info")
+end)
 
 -- install pack
 if not update then
@@ -417,111 +538,10 @@ if not update then
 	print("Installing OculusOS")
 end
 
--- Download
+-- install OculusOS
 setTextColour(colors.lime)
 print("Downloading")
 setTextColour(colors.blue)
-
--- .shellrc
-
-if not fs.exists( ".shellrc" ) then
-    table.insert(to_download,function()
-        download(url..".shellrc.lua", "/.shellrc")
-    end)
-end
-
--- Bootscreen
-local bootscreen = "bootscreen/"
-
-if turtle then
-    bootscreen = bootscreen.."turtle/"
-else
-    if pocket then
-        bootscreen = bootscreen.."pocket/"
-    else
-        bootscreen = bootscreen.."computer/"
-    end
-end
-
-if term.isColor() then
-    bootscreen = bootscreen.."colord.nfp"
-else
-    bootscreen = bootscreen.."default.nfp"
-end
-
-table.insert(to_download,function()
-    download(url..bootscreen, "/.bootscreen")
-end)
-
--- Startup
-table.insert(to_download,function()
-    download(url_build.."startup.lua", "/startup")
-end)
-
--- Programs - fix
-if shell.resolveProgram("/rom/programs/http/wget") == nil then
-    table.insert(to_download,function()
-        download(url_build .. "fix/wget.lua", "/bin/wget")
-    end)
-end
-
-if tonumber(split(os.version(), ' ')[2]) <= 1.7 then
-    table.insert(to_download,function()
-        download(url_build .. "fix/pastebin.lua", "/bin/pastebin")
-    end)
-	table.insert(to_download,function()
-        download(url_build .. "fix/00_fix.lua", "/lib/00_fix")
-    end)
-end
-
-parallel.waitForAll(
-    -- Startup
-    function()
-        for item in get(url_src.."boot/index"):gmatch("([^\n]*)\n?") do
-			if item ~= "" then
-				table.insert(to_download,function()
-					download(url_build .. "boot/"..item..".lua", "/boot/"..item)
-				end)
-			end
-        end
-    end,
-    -- APIS
-    function()
-        for item in get(url_src.."lib/index"):gmatch("([^\n]*)\n?") do
-			if item ~= "" then
-				table.insert(to_download,function()
-					download(url_build .. "lib/"..item..".lua", "/lib/"..item)
-				end)
-			end
-        end
-    end,
-    -- bin
-    function()
-        for item in get(url_src.."bin/index"):gmatch("([^\n]*)\n?") do
-			if item ~= "" then
-				table.insert(to_download,function()
-					download(url_build .. "bin/"..item..".lua", "/bin/"..item)
-				end)
-			end
-        end
-    end
-)
-
--- version
-table.insert(to_download,function()
-    save(json.encode(
-        {
-			git = {
-				owner = git.owner,
-				repo = git.repo,
-				branch = git.branch,
-				commit = json.decode(get("https://api.github.com/repos/"..git.owner..'/'..git.repo.."/git/refs/heads/"..git.branch)).object.sha
-			},
-            colord = term.isColor(),
-			minimized = minimized
-        }
-    ), "/.system_info")
-end)
 
 parallel.waitForAll(table.unpack(to_download))
 
