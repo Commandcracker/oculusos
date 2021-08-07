@@ -1,0 +1,1 @@
+for a,b in ipairs(fs.list("/boot"))do if string.sub(b,1,1)~="."then local c="/boot/"..b;if not fs.isDir(c)then shell.run(c)end end end

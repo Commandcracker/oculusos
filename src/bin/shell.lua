@@ -540,7 +540,7 @@ local worker =
 
             local sLabel = os.getComputerLabel()
             if not sLabel then
-                sLabel = "oculusos"
+                sLabel = "computer_"..os.getComputerID()
             end
 
             local ps1

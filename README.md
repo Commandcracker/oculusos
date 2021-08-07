@@ -48,6 +48,35 @@ installer
 | X        | [Net Shell/NSH](https://pastebin.com/X5Fysdi4)                | [lyqyd](https://github.com/lyqyd)                    |
 | X        | [mbs/Mildly better shell](https://github.com/SquidDev-CC/mbs) | [SquidDev](https://github.com/SquidDev)              |
 
+## Services
+
+Oculus OS has services that will run in the background. \
+Services will run before the boot process is finished, \
+This means that the Oculus OS libs and programs won't be available. \
+To create a service, just put a Lua file in `/services`
+
+### Examples
+
+chatd
+
+```lua
+local hostname = os.getComputerLabel()
+if not hostname then
+    hostname = os.getComputerID()
+end
+shell.run("chat", "host", hostname)
+```
+
+sshd
+
+```lua
+local hostname = os.getComputerLabel()
+if not hostname then
+    hostname = os.getComputerID()
+end
+shell.run("/bin/ssh", "host", hostname)
+```
+
 ## Building
 
 ### Requirements
