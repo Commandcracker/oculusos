@@ -410,12 +410,12 @@ end
 local scroll_offset = 0
 
 local function get(url)
-    local response = http.get(url)
+    local request = http.get(url)
 
-    if response then
-        local sResponse = response.readAll()
-        response.close()
-        return sResponse
+    if request then
+        local response = request.readAll()
+        request.close()
+        return response
     else
         return nil
     end
@@ -434,31 +434,12 @@ end
 local function update()
     if http then
         local system_info = json.decode(read_file("/.system_info"))
-        local data =
-            get(
-            "https://api.github.com/repos/" ..
-                system_info.git.owner .. "/" .. system_info.git.repo .. "/git/refs/heads/" .. system_info.git.branch
-        )
-        if data == nil then
-        else
-            local latest = json.decode(data).object.sha
-            local current = system_info.git.commit
-
-            if current == latest then
-            else
-                term.write("Your OculusOS is outdated by ")
-                data =
-                    get(
-                    "https://api.github.com/repos/" ..
-                        system_info.git.owner ..
-                            "/" .. system_info.git.repo .. "/compare/" .. latest .. "..." .. current
-                )
-                if data == nil then
-                    term.write("?")
-                else
-                    term.write(json.decode(data).behind_by)
-                end
-                print(" commits! Get the latest release bye typing 'do-release-upgrade'.")
+        local data = get("https://api.github.com/repos/"..system_info.git.owner.."/"..system_info.git.repo.."/compare/master..."..system_info.git.commit)
+        
+        if data ~= nil then
+            data = json.decode(data)
+            if data ~= nil and data.message == nil and data.behind_by > 0 then
+                print("Your OculusOS is outdated by "..data.behind_by.." commits! Get the latest release bye typing 'do-release-upgrade'.")
             end
         end
     end
